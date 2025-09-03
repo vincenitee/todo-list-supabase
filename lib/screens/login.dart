@@ -32,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-
                   // App Title
                   const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -54,10 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
 
-                      Text('Login to your account.', style: TextStyle(color: Colors.white, fontSize: 16),)
+                      Text(
+                        'Login to your account.',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ],
                   ),
 
+                  // Login Form
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -123,6 +126,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("Don't have an account? "),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Placeholder(),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  'Sign up',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration
+                                        .underline, // looks like a link
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
