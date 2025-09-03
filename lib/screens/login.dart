@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/screens/signup.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
+import 'package:todo_list_supabase/widgets/form_container.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -62,24 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   // Login Form
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 26,
-                    ),
-                    margin: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-
+                  FormContainer(
                     child: Form(
                       key: _formGlobalKey,
                       child: Column(
