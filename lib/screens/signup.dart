@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/screens/login.dart';
+import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
 
@@ -97,29 +98,17 @@ class SignupScreenState extends State<SignupScreen> {
                             ),
                           ),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text("Already have an account? "),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => LoginScreen(),
-                                    ),
-                                  );
-                                },
-                                child: const Text(
-                                  'Sign in',
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    decoration: TextDecoration
-                                        .underline, // looks like a link
-                                  ),
+                          AuthNavigationRow(
+                            text: 'Already have an account?',
+                            linkText: 'Sign in',
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ],
                       ),

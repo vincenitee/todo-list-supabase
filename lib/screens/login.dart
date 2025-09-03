@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/screens/signup.dart';
+import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
 
@@ -111,29 +112,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text("Don't have an account? "),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SignupScreen(),
-                                    ),
-                                  );
-                                },
-                                child: const Text(
-                                  'Sign up',
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    decoration: TextDecoration
-                                        .underline, // looks like a link
-                                  ),
+                          AuthNavigationRow(
+                            text: 'Don\'t have an account?',
+                            linkText: 'Sign up',
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignupScreen(),
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ],
                       ),
