@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/screens/login.dart';
+import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
@@ -82,20 +83,18 @@ class SignupScreenState extends State<SignupScreen> {
                           const SizedBox(height: 20),
 
                           // Signup Button
-                          SizedBox(
-                            width: double.infinity,
-                            child: TextButton.icon(
-                              onPressed: () {},
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.blue.shade700,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                          AuthButton(
+                            label: 'Sign up',
+                            icon: Icons.person_add,
+                            onPressed: () {
+                              // navigate to signup screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => LoginScreen(),
                                 ),
-                              ),
-                              label: Text('Sign up'),
-                              icon: Icon(Icons.person_add),
-                            ),
+                              );
+                            },
                           ),
 
                           AuthNavigationRow(

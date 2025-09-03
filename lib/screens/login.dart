@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/screens/signup.dart';
+import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
@@ -87,29 +88,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           const SizedBox(height: 20),
 
-                          SizedBox(
-                            width: double.infinity,
-                            child: TextButton.icon(
-                              onPressed: () {
-                                bool validated = _formGlobalKey.currentState!
-                                    .validate();
-                                if (validated) {
-                                  _formGlobalKey.currentState!.save();
-                                  debugPrint(
-                                    'Email: $_email\nPassword: $_password',
-                                  );
-                                }
-                              },
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.blue.shade700,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                          AuthButton(
+                            label: 'Login',
+                            icon: Icons.login,
+                            onPressed: () {
+                              // navigate to signup screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SignupScreen(),
                                 ),
-                              ),
-                              label: const Text('Login'),
-                              icon: Icon(Icons.login),
-                            ),
+                              );
+                            },
                           ),
 
                           AuthNavigationRow(
