@@ -59,6 +59,23 @@ class CustomTextField extends StatefulWidget {
     );
   }
 
+  // Username
+  factory CustomTextField.username({
+    Key? key,
+    TextEditingController? controller,
+    String label = 'Username',
+    String? Function(String?)? validator,
+    void Function(String?)? onSaved,
+  }){
+    return CustomTextField(
+      key: key,
+      controller: controller,
+      label: label,
+      validator: validator ?? _defaultUsernameValidator,
+      onSaved: onSaved,
+    );
+  }
+
   static String? _defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -72,6 +89,16 @@ class CustomTextField extends StatefulWidget {
   static String? _defaultPasswordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
+    }
+    return null;
+  }
+
+  static String? _defaultUsernameValidator(String? value){
+    if(value == null || value.isEmpty){
+      return 'Username is required';
+    }
+    if(value.length < 5) {
+      return 'Username should be atleast 5 characters';
     }
     return null;
   }

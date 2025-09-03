@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_supabase/screens/signup.dart';
+import 'package:todo_list_supabase/screens/login.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final _formGlobalKey = GlobalKey<FormState>();
-
-  String _email = '';
-  String _password = '';
+class SignupScreenState extends State<SignupScreen> {
+  final _signupFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Screen
+          // Background
           Column(
             children: [
               Expanded(child: Container(color: Colors.blue.shade700)),
@@ -55,13 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       Text(
-                        'Login to your account.',
+                        'Create an account.',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ],
                   ),
 
-                  // Login Form
+                  // Signup Form
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -81,40 +78,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     child: Form(
-                      key: _formGlobalKey,
+                      key: _signupFormKey,
                       child: Column(
                         children: [
                           // Email TextField
-                          CustomTextField.email(
-                            onSaved: (value) {
-                              _email = value ?? '';
-                            },
-                          ),
+                          CustomTextField.email(),
+
+                          const SizedBox(height: 20),
+
+                          // Username TextField
+                          CustomTextField.username(),
 
                           const SizedBox(height: 20),
 
                           // Password TextField
-                          CustomTextField.password(
-                            onSaved: (value) {
-                              _password = value ?? '';
-                            },
-                          ),
+                          CustomTextField.password(),
 
                           const SizedBox(height: 20),
 
+                          // Signup Button
                           SizedBox(
                             width: double.infinity,
                             child: TextButton.icon(
-                              onPressed: () {
-                                bool validated = _formGlobalKey.currentState!
-                                    .validate();
-                                if (validated) {
-                                  _formGlobalKey.currentState!.save();
-                                  debugPrint(
-                                    'Email: $_email\nPassword: $_password',
-                                  );
-                                }
-                              },
+                              onPressed: () {},
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.blue.shade700,
@@ -122,26 +108,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
-                              label: const Text('Login'),
-                              icon: Icon(Icons.login),
+                              label: Text('Sign up'),
+                              icon: Icon(Icons.person_add),
                             ),
                           ),
+
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text("Don't have an account? "),
+                              const Text("Already have an account? "),
                               TextButton(
                                 onPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SignupScreen(),
+                                      builder: (context) => LoginScreen(),
                                     ),
                                   );
                                 },
                                 child: const Text(
-                                  'Sign up',
+                                  'Sign in',
                                   style: TextStyle(
                                     color: Colors.blue,
                                     decoration: TextDecoration
