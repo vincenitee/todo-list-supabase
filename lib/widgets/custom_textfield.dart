@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget {
   final Widget? suffixIcon;
   final void Function()? onSuffixIconPressed;
   final String? Function(String?)? validator;
+  final void Function(String?)? onSaved;
   final bool isPassword; // New parameter for password fields
 
   const CustomTextField({
@@ -19,6 +20,7 @@ class CustomTextField extends StatefulWidget {
     this.suffixIcon,
     this.onSuffixIconPressed,
     this.validator,
+    this.onSaved,
     this.isPassword = false, // Default to false
   });
 
@@ -28,12 +30,14 @@ class CustomTextField extends StatefulWidget {
     TextEditingController? controller,
     String label = 'Email',
     String? Function(String?)? validator,
+    void Function(String?)? onSaved,
   }) {
     return CustomTextField(
       key: key,
       controller: controller,
       label: label,
       validator: validator ?? _defaultEmailValidator,
+      onSaved: onSaved,
     );
   }
 
@@ -43,6 +47,7 @@ class CustomTextField extends StatefulWidget {
     TextEditingController? controller,
     String label = 'Password',
     String? Function(String?)? validator,
+    void Function(String?)? onSaved,
   }) {
     return CustomTextField(
       key: key,
@@ -50,6 +55,7 @@ class CustomTextField extends StatefulWidget {
       label: label,
       isPassword: true,
       validator: validator ?? _defaultPasswordValidator,
+      onSaved: onSaved,
     );
   }
 
@@ -115,6 +121,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       ),
 
       validator: widget.validator,
+      onSaved: widget.onSaved,
     );
   }
 }
