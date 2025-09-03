@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list_supabase/screens/home.dart';
 import 'package:todo_list_supabase/screens/signup.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
@@ -96,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => SignupScreen(),
+                                  builder: (_) => HomeScreen(),
                                 ),
                               );
                             },
