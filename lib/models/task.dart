@@ -2,7 +2,7 @@ class Task{
   final int id;
   final String userId;
   final String title;
-  final bool isDone;
+  bool isDone;
   final DateTime createdAt;
 
   Task({

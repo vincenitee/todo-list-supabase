@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list_supabase/models/task.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -9,6 +10,36 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<Task> tasks = [
+    Task(
+      id: 1,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Buy groceries',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 5)),
+    ),
+    Task(
+      id: 2,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Study Flutter',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Task(
+      id: 3,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Workout',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 2)),
+    ),
+    Task(
+      id: 4,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Read a book',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 3)),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -36,26 +67,50 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
       ),
 
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              child: CustomTextField(label: 'Search task'),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            child: CustomTextField(label: 'Search task'),
+          ),
+
+          // List of Tasks
+          Expanded(
+            child: ListView.builder(
+              itemCount: tasks.length,
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                final task = tasks[index];
+                return ListTile(
+                  leading: Icon(
+                    task.isDone
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    color: task.isDone ? Colors.blue.shade700 : Colors.grey,
+                  ),
+                  title: Text(task.title),
+                  trailing: Text(
+                    '${task.createdAt.hour}:${task.createdAt.minute.toString().padLeft(2, '0')}',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  subtitle: Text(task.isDone ? 'Completed' : 'Pending'),
+                  onTap: () {
+                    // toggle done state in UI for demo purposes
+                    task.isDone = !task.isDone;
+                    (context as Element)
+                        .markNeedsBuild(); // rebuild to reflect change
+                  },
+                );
+              },
             ),
-
-            // List of Tasks
-
-          ],
-        ),
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         backgroundColor: Colors.blue.shade700,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(100),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         child: Icon(Icons.add_task, color: Colors.white, size: 24),
       ),
 
