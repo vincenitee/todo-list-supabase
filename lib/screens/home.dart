@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/models/task.dart';
-import 'package:todo_list_supabase/screens/profile.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -275,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
-          final List<Widget> screens = [HomeScreen(), ProfileScreen()];
+          final List<Widget> screens = [HomeScreen(),];
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => screens[index]),
