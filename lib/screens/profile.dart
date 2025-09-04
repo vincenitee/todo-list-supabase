@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/screens/home.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
-import 'package:todo_list_supabase/widgets/custom_textfield.dart';
+import 'package:todo_list_supabase/widgets/profile_form.dart';
 import 'package:todo_list_supabase/widgets/profile_header_card.dart';
 import 'package:todo_list_supabase/widgets/stat_card.dart';
 
@@ -13,8 +13,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final _profileFormKey = GlobalKey<FormState>();
-  bool _isEditing = false;
   int _currentIndex = 1; // Profile tab is selected
 
   // Mock user data - replace with actual user data
@@ -96,111 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             // Profile Form Section
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Account Information',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                      TextButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            _isEditing = !_isEditing;
-                          });
-                        },
-                        icon: Icon(
-                          _isEditing ? Icons.close : Icons.edit,
-                          size: 18,
-                        ),
-                        label: Text(_isEditing ? 'Cancel' : 'Edit'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  Form(
-                    key: _profileFormKey,
-                    child: Column(
-                      children: [
-                        CustomTextField.username(),
-                        const SizedBox(height: 16),
-                        CustomTextField.password(),
-
-                        if (_isEditing) ...[
-                          const SizedBox(height: 24),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isEditing = false;
-                                    });
-                                  },
-                                  icon: Icon(Icons.close),
-                                  label: Text('Cancel'),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(vertical: 12),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: AuthButton(
-                                  label: 'Save Changes',
-                                  icon: Icons.save,
-                                  onPressed: () {
-                                    if (_profileFormKey.currentState!
-                                        .validate()) {
-                                      setState(() {
-                                        _isEditing = false;
-                                      });
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Profile updated successfully!',
-                                          ),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
+            ProfileForm(),
+            
             // Logout Section
             Container(
               margin: const EdgeInsets.all(16),
