@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/models/task.dart';
+import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -76,86 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
               color: Colors.white, // Solid background moved to decoration
             ),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue.shade100),
-              ),
-              child: () {
-                final completedTasks = tasks
-                    .where((task) => task.isDone)
-                    .length;
-                final totalTasks = tasks.length;
-                final percentage = totalTasks > 0
-                    ? (completedTasks / totalTasks * 100)
-                    : 0.0;
-
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Progress',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              '$completedTasks of $totalTasks tasks completed',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade600,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            '${percentage.toInt()}%',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: percentage / 100,
-                        backgroundColor: Colors.grey.shade200,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          percentage == 100
-                              ? Colors.green.shade600
-                              : Colors.blue.shade600,
-                        ),
-                        minHeight: 8,
-                      ),
-                    ),
-                  ],
-                );
-              }(),
-            ),
+            child: ProgressCard(tasks: tasks),
           ),
 
           // Task List Header (Optional)
