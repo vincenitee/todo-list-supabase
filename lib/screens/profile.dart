@@ -3,6 +3,7 @@ import 'package:todo_list_supabase/screens/home.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/profile_header_card.dart';
+import 'package:todo_list_supabase/widgets/stat_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -52,7 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             // Profile Hero Section
             ProfileHeaderCard(
               userEmail: userEmail,
@@ -66,29 +66,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: _buildStatCard(
-                      'Total Tasks',
-                      '24',
-                      Icons.task_alt,
-                      Colors.blue,
+                    child: StatCard(
+                      title: 'Total Tasks',
+                      value: '24',
+                      icon: Icons.task_alt,
+                      color: Colors.blue,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: _buildStatCard(
-                      'Completed',
-                      '18',
-                      Icons.check_circle,
-                      Colors.green,
+                    child: StatCard(
+                      title: 'Completed',
+                      value: '18',
+                      icon: Icons.check_circle,
+                      color: Colors.green,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: _buildStatCard(
-                      'Pending',
-                      '6',
-                      Icons.pending,
-                      Colors.orange,
+                    child: StatCard(
+                      title: 'Pending',
+                      value: '6',
+                      icon: Icons.pending,
+                      color: Colors.orange,
                     ),
                   ),
                 ],
@@ -239,48 +239,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey.shade800,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-            textAlign: TextAlign.center,
-          ),
         ],
       ),
     );
