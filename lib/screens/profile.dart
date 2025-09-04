@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/screens/home.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
+import 'package:todo_list_supabase/widgets/profile_header_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,7 +15,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _profileFormKey = GlobalKey<FormState>();
   bool _isEditing = false;
   int _currentIndex = 1; // Profile tab is selected
-  
+
   // Mock user data - replace with actual user data
   String userName = "John Doe";
   String userEmail = "john.doe@example.com";
@@ -51,105 +52,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Profile Header Section
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.blue.shade700,
-                    Colors.blue.shade500,
-                  ],
-                ),
-              ),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                margin: EdgeInsets.only(top: 40),
-                child: Column(
-                  children: [
-                    // Profile Avatar
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundColor: Colors.blue.shade100,
-                          child: CircleAvatar(
-                            radius: 55,
-                            backgroundColor: Colors.blue.shade200,
-                            child: Icon(
-                              Icons.person,
-                              size: 60,
-                              color: Colors.blue.shade700,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade600,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 3),
-                            ),
-                            child: IconButton(
-                              icon: Icon(Icons.camera_alt, color: Colors.white, size: 20),
-                              onPressed: () {
-                                // Handle profile picture change
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Profile picture update coming soon!')),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      userName,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      userEmail,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade100,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        'Member since ${_formatDate(joinDate)}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.green.shade700,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+
+            // Profile Hero Section
+            ProfileHeaderCard(
+              userEmail: userEmail,
+              userName: userName,
+              joinDate: joinDate,
             ),
 
             // Profile Statistics
@@ -157,11 +65,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               margin: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Expanded(child: _buildStatCard('Total Tasks', '24', Icons.task_alt, Colors.blue)),
+                  Expanded(
+                    child: _buildStatCard(
+                      'Total Tasks',
+                      '24',
+                      Icons.task_alt,
+                      Colors.blue,
+                    ),
+                  ),
                   const SizedBox(width: 12),
-                  Expanded(child: _buildStatCard('Completed', '18', Icons.check_circle, Colors.green)),
+                  Expanded(
+                    child: _buildStatCard(
+                      'Completed',
+                      '18',
+                      Icons.check_circle,
+                      Colors.green,
+                    ),
+                  ),
                   const SizedBox(width: 12),
-                  Expanded(child: _buildStatCard('Pending', '6', Icons.pending, Colors.orange)),
+                  Expanded(
+                    child: _buildStatCard(
+                      'Pending',
+                      '6',
+                      Icons.pending,
+                      Colors.orange,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -218,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CustomTextField.username(),
                         const SizedBox(height: 16),
                         CustomTextField.password(),
-                        
+
                         if (_isEditing) ...[
                           const SizedBox(height: 24),
                           Row(
@@ -243,13 +172,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   label: 'Save Changes',
                                   icon: Icons.save,
                                   onPressed: () {
-                                    if (_profileFormKey.currentState!.validate()) {
+                                    if (_profileFormKey.currentState!
+                                        .validate()) {
                                       setState(() {
                                         _isEditing = false;
                                       });
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         SnackBar(
-                                          content: Text('Profile updated successfully!'),
+                                          content: Text(
+                                            'Profile updated successfully!',
+                                          ),
                                           backgroundColor: Colors.green,
                                         ),
                                       );
@@ -292,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             setState(() {
               _currentIndex = index;
             });
-            
+
             final List<Widget> screens = [HomeScreen(), ProfileScreen()];
             Navigator.pushReplacement(
               context,
@@ -310,7 +244,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -339,25 +278,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 4),
           Text(
             title,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
             textAlign: TextAlign.center,
           ),
         ],
       ),
     );
-  }
-
-
-
-  String _formatDate(DateTime date) {
-    final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return '${months[date.month - 1]} ${date.year}';
   }
 
   void _showLogoutDialog(BuildContext context) {
