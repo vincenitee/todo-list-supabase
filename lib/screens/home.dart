@@ -47,22 +47,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue.shade700,
         automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(Icons.task_outlined, color: Colors.white),
-            const SizedBox(width: 12),
-            Text(
-              'TO-DO Tasks',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
-                letterSpacing: 1.2,
-                color: Colors.white,
-              ),
-            ),
-          ],
+        title: Text(
+          'Tasks',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 22,
+            letterSpacing: 1.2,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
       ),
@@ -274,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
-          final List<Widget> screens = [HomeScreen(),];
+          final List<Widget> screens = [HomeScreen(), HomeScreen()];
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => screens[index]),
