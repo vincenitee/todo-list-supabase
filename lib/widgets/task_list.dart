@@ -10,14 +10,14 @@ class TaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: tasks.isEmpty
-          ? NoTaskYet()
-          : ListView.builder(
+    return tasks.isEmpty
+        ? NoTaskYet()
+        : ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             itemCount: tasks.length,
             itemBuilder: (context, index) {
-            return TaskItem(task: tasks[index], onTap: onTaskTap);
-          }),
-    );
+              return TaskItem(task: tasks[index], onTap: onTaskTap);
+            },
+          );
   }
 }

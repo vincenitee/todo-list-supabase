@@ -3,6 +3,7 @@ import 'package:todo_list_supabase/models/task.dart';
 import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/task_list.dart';
+import 'package:todo_list_supabase/widgets/task_list_header.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -85,32 +86,20 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             color: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Tasks',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                if (tasks.isNotEmpty)
-                  Text(
-                    '${tasks.length} ${tasks.length == 1 ? 'task' : 'tasks'}',
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                  ),
-              ],
-            ),
+            child: TaskListHeader(tasksCount: tasks.length),
           ),
 
           // List of Tasks
-          TaskList(tasks: tasks, onTaskTap: (task) {
-            setState(() {
-              task.isDone = !task.isDone;
-            });
-          })
+          Expanded(
+            child: TaskList(
+              tasks: tasks,
+              onTaskTap: (task) {
+                setState(() {
+                  task.isDone = !task.isDone;
+                });
+              },
+            ),
+          ),
         ],
       ),
 
