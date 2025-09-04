@@ -9,7 +9,8 @@ class CustomTextField extends StatefulWidget {
   final void Function()? onSuffixIconPressed;
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
-  final bool isPassword; // New parameter for password fields
+  final bool isPassword;
+  final bool enabled;
 
   const CustomTextField({
     super.key,
@@ -21,7 +22,8 @@ class CustomTextField extends StatefulWidget {
     this.onSuffixIconPressed,
     this.validator,
     this.onSaved,
-    this.isPassword = false, // Default to false
+    this.isPassword = false,
+    this.enabled = true, // Default to false
   });
 
   // Email
@@ -31,6 +33,7 @@ class CustomTextField extends StatefulWidget {
     String label = 'Email',
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
+    bool enabled = true,
   }) {
     return CustomTextField(
       key: key,
@@ -38,6 +41,7 @@ class CustomTextField extends StatefulWidget {
       label: label,
       validator: validator ?? _defaultEmailValidator,
       onSaved: onSaved,
+      enabled: enabled,
     );
   }
 
@@ -48,6 +52,7 @@ class CustomTextField extends StatefulWidget {
     String label = 'Password',
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
+    bool enabled = true,
   }) {
     return CustomTextField(
       key: key,
@@ -56,6 +61,7 @@ class CustomTextField extends StatefulWidget {
       isPassword: true,
       validator: validator ?? _defaultPasswordValidator,
       onSaved: onSaved,
+      enabled: enabled,
     );
   }
 
@@ -66,6 +72,7 @@ class CustomTextField extends StatefulWidget {
     String label = 'Username',
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
+    bool enabled = true,
   }){
     return CustomTextField(
       key: key,
@@ -73,6 +80,7 @@ class CustomTextField extends StatefulWidget {
       label: label,
       validator: validator ?? _defaultUsernameValidator,
       onSaved: onSaved,
+      enabled: enabled,
     );
   }
 
@@ -125,6 +133,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: widget.enabled,
       controller: widget.controller,
       obscureText: _obscureText,
       decoration: InputDecoration(

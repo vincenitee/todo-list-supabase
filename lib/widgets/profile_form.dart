@@ -36,7 +36,7 @@ class _ProfileFormState extends State<ProfileForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Account Information',
+                _isEditing ? 'Editing Profile' : 'Account Information' ,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -60,9 +60,9 @@ class _ProfileFormState extends State<ProfileForm> {
             key: _profileFormKey,
             child: Column(
               children: [
-                CustomTextField.username(),
+                CustomTextField.username(enabled: _isEditing),
                 const SizedBox(height: 16),
-                CustomTextField.password(),
+                CustomTextField.password(enabled: _isEditing,),
 
                 if (_isEditing) ...[
                   const SizedBox(height: 24),
