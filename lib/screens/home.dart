@@ -11,34 +11,118 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Task> tasks = [
-    // Task(
-    //   id: 1,
-    //   userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-    //   title: 'Buy groceries',
-    //   isDone: false,
-    //   createdAt: DateTime.now().subtract(Duration(hours: 5)),
-    // ),
-    // Task(
-    //   id: 2,
-    //   userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-    //   title: 'Study Flutter',
-    //   isDone: true,
-    //   createdAt: DateTime.now().subtract(Duration(days: 1)),
-    // ),
-    // Task(
-    //   id: 3,
-    //   userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-    //   title: 'Workout',
-    //   isDone: false,
-    //   createdAt: DateTime.now().subtract(Duration(hours: 2)),
-    // ),
-    // Task(
-    //   id: 4,
-    //   userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-    //   title: 'Read a book',
-    //   isDone: true,
-    //   createdAt: DateTime.now().subtract(Duration(days: 3)),
-    // ),
+    Task(
+      id: 1,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Buy groceries',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 5)),
+    ),
+    Task(
+      id: 2,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Study Flutter',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Task(
+      id: 3,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Workout',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 2)),
+    ),
+    Task(
+      id: 4,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Read a book',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 3)),
+    ),
+    Task(
+      id: 1,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Buy groceries',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 5)),
+    ),
+    Task(
+      id: 2,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Study Flutter',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Task(
+      id: 3,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Workout',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 2)),
+    ),
+    Task(
+      id: 4,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Read a book',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 3)),
+    ),
+    Task(
+      id: 1,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Buy groceries',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 5)),
+    ),
+    Task(
+      id: 2,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Study Flutter',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Task(
+      id: 3,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Workout',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 2)),
+    ),
+    Task(
+      id: 4,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Read a book',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 3)),
+    ),
+    Task(
+      id: 1,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Buy groceries',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 5)),
+    ),
+    Task(
+      id: 2,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Study Flutter',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Task(
+      id: 3,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Workout',
+      isDone: false,
+      createdAt: DateTime.now().subtract(Duration(hours: 2)),
+    ),
+    Task(
+      id: 4,
+      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+      title: 'Read a book',
+      isDone: true,
+      createdAt: DateTime.now().subtract(Duration(days: 3)),
+    ),
   ];
 
   @override
@@ -70,94 +154,105 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           // Search Field
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: CustomTextField(label: 'Search task'),
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              child: CustomTextField(label: 'Search task'),
+            ),
           ),
 
           // Progress Section
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.blue.shade100),
+              color: Colors.white, // Solid background moved to decoration
             ),
-            child: () {
-              final completedTasks = tasks.where((task) => task.isDone).length;
-              final totalTasks = tasks.length;
-              final percentage = totalTasks > 0
-                  ? (completedTasks / totalTasks * 100)
-                  : 0.0;
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.blue.shade100),
+              ),
+              child: () {
+                final completedTasks = tasks
+                    .where((task) => task.isDone)
+                    .length;
+                final totalTasks = tasks.length;
+                final percentage = totalTasks > 0
+                    ? (completedTasks / totalTasks * 100)
+                    : 0.0;
 
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Progress',
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Progress',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              '$completedTasks of $totalTasks tasks completed',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade600,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '${percentage.toInt()}%',
                             style: TextStyle(
-                              fontSize: 16,
+                              color: Colors.white,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: Colors.grey.shade800,
                             ),
                           ),
-                          SizedBox(height: 4),
-                          Text(
-                            '$completedTasks of $totalTasks tasks completed',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade600,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          '${percentage.toInt()}%',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(
-                      value: percentage / 100,
-                      backgroundColor: Colors.grey.shade200,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        percentage == 100
-                            ? Colors.green.shade600
-                            : Colors.blue.shade600,
-                      ),
-                      minHeight: 8,
+                      ],
                     ),
-                  ),
-                ],
-              );
-            }(),
+                    SizedBox(height: 12),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: percentage / 100,
+                        backgroundColor: Colors.grey.shade200,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          percentage == 100
+                              ? Colors.green.shade600
+                              : Colors.blue.shade600,
+                        ),
+                        minHeight: 8,
+                      ),
+                    ),
+                  ],
+                );
+              }(),
+            ),
           ),
 
           // Task List Header (Optional)
-          Padding(
+          Container(
+            color: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
