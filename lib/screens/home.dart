@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/models/task.dart';
+import 'package:todo_list_supabase/screens/profile.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,90 +12,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Task> tasks = [
-    Task(
-      id: 1,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Buy groceries',
-      isDone: false,
-      createdAt: DateTime.now().subtract(Duration(hours: 5)),
-    ),
-    Task(
-      id: 2,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Study Flutter',
-      isDone: true,
-      createdAt: DateTime.now().subtract(Duration(days: 1)),
-    ),
-    Task(
-      id: 3,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Workout',
-      isDone: false,
-      createdAt: DateTime.now().subtract(Duration(hours: 2)),
-    ),
-    Task(
-      id: 4,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Read a book',
-      isDone: true,
-      createdAt: DateTime.now().subtract(Duration(days: 3)),
-    ),
-    Task(
-      id: 1,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Buy groceries',
-      isDone: false,
-      createdAt: DateTime.now().subtract(Duration(hours: 5)),
-    ),
-    Task(
-      id: 2,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Study Flutter',
-      isDone: true,
-      createdAt: DateTime.now().subtract(Duration(days: 1)),
-    ),
-    Task(
-      id: 3,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Workout',
-      isDone: false,
-      createdAt: DateTime.now().subtract(Duration(hours: 2)),
-    ),
-    Task(
-      id: 4,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Read a book',
-      isDone: true,
-      createdAt: DateTime.now().subtract(Duration(days: 3)),
-    ),
-    Task(
-      id: 1,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Buy groceries',
-      isDone: false,
-      createdAt: DateTime.now().subtract(Duration(hours: 5)),
-    ),
-    Task(
-      id: 2,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Study Flutter',
-      isDone: true,
-      createdAt: DateTime.now().subtract(Duration(days: 1)),
-    ),
-    Task(
-      id: 3,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Workout',
-      isDone: false,
-      createdAt: DateTime.now().subtract(Duration(hours: 2)),
-    ),
-    Task(
-      id: 4,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Read a book',
-      isDone: true,
-      createdAt: DateTime.now().subtract(Duration(days: 3)),
-    ),
     Task(
       id: 1,
       userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
@@ -357,6 +274,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          final List<Widget> screens = [HomeScreen(), ProfileScreen()];
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => screens[index]),
+          );
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
