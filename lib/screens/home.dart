@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/models/task.dart';
 import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
+import 'package:todo_list_supabase/widgets/task_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -105,77 +106,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           // List of Tasks
-          Expanded(
-            child: tasks.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.task_alt,
-                          size: 64,
-                          color: Colors.grey.shade400,
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'No tasks yet',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Add your first task to get started!',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: tasks.length,
-                    physics: BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final task = tasks[index];
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 3),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(5),
-                          ),
-                          leading: Icon(
-                            task.isDone
-                                ? Icons.check_circle
-                                : Icons.radio_button_unchecked,
-                            color: task.isDone
-                                ? Colors.blue.shade700
-                                : Colors.grey,
-                          ),
-                          title: Text(task.title),
-                          trailing: Text(
-                            '${task.createdAt.hour}:${task.createdAt.minute.toString().padLeft(2, '0')}',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
-                          tileColor: task.isDone
-                              ? Colors.lightBlue.shade50
-                              : Colors.grey.shade50,
-                          subtitle: Text(task.isDone ? 'Completed' : 'Pending'),
-                          onTap: () {
-                            // toggle done state in UI for demo purposes
-                            task.isDone = !task.isDone;
-                            (context as Element)
-                                .markNeedsBuild(); // rebuild to reflect change
-                          },
-                        ),
-                      );
-                    },
-                  ),
-          ),
+          TaskList(tasks: tasks, onTaskTap: (task) {
+            setState(() {
+              task.isDone = !task.isDone;
+            });
+          })
         ],
       ),
 
