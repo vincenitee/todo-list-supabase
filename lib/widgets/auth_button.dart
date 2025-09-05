@@ -7,6 +7,7 @@ class AuthButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final double? borderRadius;
+  final double? width;
 
   const AuthButton({
     super.key,
@@ -16,12 +17,13 @@ class AuthButton extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.borderRadius,
+    this.width
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: width ?? double.infinity,
       child: TextButton.icon(
         onPressed: onPressed,
         icon: Icon(icon),

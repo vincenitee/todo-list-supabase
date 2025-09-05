@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/models/task.dart';
+import 'package:todo_list_supabase/screens/profile.dart';
 import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/task_list.dart';
@@ -64,6 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             onPressed: () {
               // TODO: NAVIGATE TO THE PROFILE PAGE
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => ProfileScreen()),
+              );
             },
             icon: Icon(Icons.person, color: Colors.white, size: 20),
           ),
