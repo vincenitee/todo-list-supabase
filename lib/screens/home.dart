@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               // TODO: NAVIGATE TO THE PROFILE PAGE
             },
-            icon: Icon(Icons.person, color: Colors.white),
+            icon: Icon(Icons.person, color: Colors.white, size: 20),
           ),
         ],
       ),
