@@ -60,6 +60,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              // TODO: NAVIGATE TO THE PROFILE PAGE
+            },
+            icon: Icon(Icons.person, color: Colors.white),
+          ),
+        ],
       ),
 
       body: Column(
@@ -108,20 +116,6 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.blue.shade700,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         child: Icon(Icons.add_task, color: Colors.white, size: 24),
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          final List<Widget> screens = [HomeScreen(), HomeScreen()];
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => screens[index]),
-          );
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
       ),
     );
   }
