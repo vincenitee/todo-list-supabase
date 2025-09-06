@@ -12,7 +12,7 @@ class Task{
     required this.isDone,
     required this.createdAt,
   });
-
+  
   factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
       id: map['id'] as int,
@@ -25,7 +25,6 @@ class Task{
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'user_id': userId,
       'title': title,
       'done': isDone,
