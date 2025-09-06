@@ -40,7 +40,7 @@ class TaskRepository {
 
     return Task.fromMap(response);
   }
-
+  
   // Deletes a task
   Future<void> deleteTask(int id) async {
     await client.from('tasks').delete().eq('id', id);
