@@ -111,6 +111,14 @@ class CustomTextField extends StatefulWidget {
     return null;
   }
 
+  String? _defaultTextFieldValidator(String? value){
+    if(value == null || value.isEmpty) {
+      return '$label is required.';
+    }
+
+    return null;
+  }
+
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
@@ -156,7 +164,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   : null),
       ),
 
-      validator: widget.validator,
+      validator: widget.validator ?? widget._defaultTextFieldValidator,
       onSaved: widget.onSaved,
     );
   }

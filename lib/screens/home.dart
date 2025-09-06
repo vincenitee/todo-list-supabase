@@ -3,6 +3,7 @@ import 'package:todo_list_supabase/models/task.dart';
 import 'package:todo_list_supabase/screens/profile.dart';
 import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
+import 'package:todo_list_supabase/widgets/task_dialog.dart';
 import 'package:todo_list_supabase/widgets/task_list.dart';
 import 'package:todo_list_supabase/widgets/task_list_header.dart';
 
@@ -45,6 +46,18 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
 
+  void _handleTaskSubmission(String taskTitle) {
+    tasks.add(
+      Task(
+        id: 6,
+        userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
+        title: taskTitle,
+        isDone: false,
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              // TODO: NAVIGATE TO THE PROFILE PAGE
+
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => ProfileScreen()),
@@ -104,20 +117,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // List of Tasks
           Expanded(
-            child: TaskList(
-              tasks: tasks,
-              onTaskTap: (task) {
-                setState(() {
-                  task.isDone = !task.isDone;
-                });
-              },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: TaskList(
+                tasks: tasks,
+                onTaskTap: (task) {
+                  setState(() {
+                    task.isDone = !task.isDone;
+                  });
+                },
+              ),
             ),
           ),
         ],
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) => TaskDialog(
+              // TODO: Implement the actual saving of data to the database
+              onSubmit: _handleTaskSubmission,
+            ),
+          );
+        },
+
         backgroundColor: Colors.blue.shade700,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         child: Icon(Icons.add_task, color: Colors.white, size: 24),
