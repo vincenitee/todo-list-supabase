@@ -1,0 +1,205 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class AuthRepository {
+  final SupabaseClient client;
+
+  AuthRepository(this.client);
+
+  // Sign up
+  Future<AuthResponse> signUp(
+    String email,
+    String username,
+    String password,
+  ) async {
+    try {
+      final response = await client.auth.signUp(
+        email: email,
+        password: password,
+      );
+
+      final user = response.user;
+      if (user != null) {
+        // Create profile after successful auth signup
+        await client.from('profiles').insert({
+          'user_id': user.id,
+          'username': username,
+        });
+      } else {
+        throw AuthException('Sign up failed: No user returned');
+      }
+
+      return response;
+    } on AuthException {
+      rethrow;
+    } on PostgrestException catch (e) {
+      throw Exception('Failed to create profile: ${e.message}');
+    } catch (e) {
+      throw Exception('Unexpected error during sign up: $e');
+    }
+  }
+
+  // Sign in
+  Future<AuthResponse> signIn(String email, String password) async {
+    try {
+      final response = await client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+
+      if (response.user == null) {
+        throw AuthException('Sign in failed: No user returned');
+      }
+
+      return response;
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw Exception('Unexpected error during sign in: $e');
+    }
+  }
+
+  // Sign out
+  Future<void> signOut() async {
+    try {
+      await client.auth.signOut();
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw Exception('Unexpected error during sign out: $e');
+    }
+  }
+
+  // Update Information
+  Future<User?> updateInformation(
+    String email,
+    String username,
+    String password,
+  ) async {
+    try {
+      // Update auth information
+      final response = await client.auth.updateUser(
+        UserAttributes(email: email, password: password),
+      );
+
+      final user = response.user;
+      if (user == null) {
+        throw AuthException('Failed to update user authentication');
+      }
+
+      // Update profile information
+      await client
+          .from('profiles')
+          .update({'username': username})
+          .eq('user_id', user.id);
+
+      return user;
+      // Supabase doesn't throw on update errors, so we should check the response
+      // if needed based on your Supabase setup
+    } on AuthException {
+      rethrow;
+    } on PostgrestException catch (e) {
+      throw Exception('Failed to update profile: ${e.message}');
+    } catch (e) {
+      throw Exception('Failed to update user information: $e');
+    }
+  }
+
+  // Get the current user
+  User? getCurrentUser() {
+    return client.auth.currentUser;
+  }
+
+  // Get current user's profile
+  Future<Map<String, dynamic>?> getCurrentUserProfile() async {
+    final user = getCurrentUser();
+    if (user == null) return null;
+
+    try {
+      final response = await client
+          .from('profiles')
+          .select()
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+      return response;
+    } on PostgrestException catch (e) {
+      throw Exception('Failed to fetch user profile: ${e.message}');
+    } catch (e) {
+      throw Exception('Unexpected error fetching profile: $e');
+    }
+  }
+
+  // Check if user is authenticated
+  bool get isAuthenticated => getCurrentUser() != null;
+
+  // Stream of auth state changes
+  Stream<AuthState> get authStateChanges => client.auth.onAuthStateChange;
+
+  // Reset password
+  Future<void> resetPassword(String email) async {
+    try {
+      await client.auth.resetPasswordForEmail(email);
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw Exception('Failed to send reset password email: $e');
+    }
+  }
+
+  // Update password only
+  Future<void> updatePassword(String newPassword) async {
+    try {
+      final response = await client.auth.updateUser(
+        UserAttributes(password: newPassword),
+      );
+
+      if (response.user == null) {
+        throw AuthException('Failed to update password');
+      }
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw Exception('Failed to update password: $e');
+    }
+  }
+
+  // Update email only
+  Future<void> updateEmail(String newEmail) async {
+    try {
+      final response = await client.auth.updateUser(
+        UserAttributes(email: newEmail),
+      );
+
+      if (response.user == null) {
+        throw AuthException('Failed to update email');
+      }
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw Exception('Failed to update email: $e');
+    }
+  }
+
+  // Delete user account
+  Future<void> deleteAccount() async {
+    final user = getCurrentUser();
+    if (user == null) {
+      throw AuthException('No authenticated user to delete');
+    }
+
+    try {
+      // First delete the profile
+      await client.from('profiles').delete().eq('user_id', user.id);
+
+      // Then delete the auth user (if your Supabase setup allows this)
+      // Note: User deletion might need to be handled server-side depending on your setup
+      await client.auth.signOut();
+    } on PostgrestException catch (e) {
+      throw Exception('Failed to delete user profile: ${e.message}');
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      throw Exception('Failed to delete account: $e');
+    }
+  }
+}
