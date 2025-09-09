@@ -4,6 +4,7 @@ import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/screens/home.dart';
 import 'package:todo_list_supabase/screens/signup.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
+import 'package:todo_list_supabase/widgets/auth_loading_overlay.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
@@ -232,24 +233,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
           // Loading overlay
           if (authState.isLoading)
-            Container(
-              color: Colors.black.withValues(alpha: 0.3),
-              child: const Center(
-                child: Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 16),
-                        Text('Logging in...'),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            AuthLoadingOverlay(),
         ],
       ),
     );
