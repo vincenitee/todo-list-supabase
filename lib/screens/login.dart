@@ -8,6 +8,7 @@ import 'package:todo_list_supabase/widgets/auth_screen_header.dart';
 import 'package:todo_list_supabase/widgets/auth_loading_overlay.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
+import 'package:todo_list_supabase/widgets/error_banner.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -122,34 +123,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           // Show error message if there's an error
                           authState.when(
                             data: (_) => const SizedBox.shrink(),
-                            error: (error, _) => Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.red.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.red.shade200),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.error,
-                                    color: Colors.red.shade600,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      error.toString(),
-                                      style: TextStyle(
-                                        color: Colors.red.shade600,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            error: (error, _) => ErrorBanner(errorMessage: error.toString()),
                             loading: () => const SizedBox.shrink(),
                           ),
 
