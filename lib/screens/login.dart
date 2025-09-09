@@ -25,39 +25,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String _password = '';
 
   void _handleLogin() async {
-    // Watches the current state of the Auth
-    final authState = ref.watch(authNotifierProvider);
-
+    // Validates input
     if (_loginFormKey.currentState!.validate()) {
+      // Saves input to variables
       _loginFormKey.currentState!.save();
 
       // Call the login method from your auth provider
       await ref.read(authNotifierProvider.notifier).signIn(_email, _password);
-
-      // Handle the result if needed
-      authState.when(
-        data: (user) {
-          if (user != null) {
-            // Navigate to home screen on successful login
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
-          }
-        },
-        error: (error, stackTrace) {
-          // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Login failed: ${error.toString()}'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        },
-        loading: () {
-          const Center(child: CircularProgressIndicator());
-        },
-      );
     }
   }
 
