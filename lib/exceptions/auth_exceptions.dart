@@ -10,7 +10,6 @@ class AuthException implements Exception {
   String toString() => message;
 }
 
-// All specific exceptions in one place
 class InvalidCredentialsException extends AuthException {
   const InvalidCredentialsException() : super(
     'Invalid email or password. Please check your credentials and try again.',
@@ -53,7 +52,6 @@ class EmailAlreadyInUseException extends AuthException {
   );
 }
 
-// Simple error mapping - just extract your function into a class
 class AuthErrorMapper {
   static AuthException mapError(dynamic error) {
     // Already user-friendly
@@ -85,6 +83,7 @@ class AuthErrorMapper {
     // Handle network errors
     final errorStr = error.toString().toLowerCase();
     if (errorStr.contains('network') ||
+        errorStr.contains('socketexception') ||
         errorStr.contains('connection') ||
         errorStr.contains('timeout')) {
       return const NetworkException();
