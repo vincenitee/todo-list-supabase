@@ -4,6 +4,7 @@ import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/screens/home.dart';
 import 'package:todo_list_supabase/screens/signup.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
+import 'package:todo_list_supabase/widgets/auth_screen_header.dart';
 import 'package:todo_list_supabase/widgets/auth_loading_overlay.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
@@ -23,7 +24,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String _password = '';
 
   void _handleLogin() async {
+    // Watches the current state of the Auth
     final authState = ref.watch(authNotifierProvider);
+
     if (_loginFormKey.currentState!.validate()) {
       _loginFormKey.currentState!.save();
 
@@ -105,30 +108,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Column(
                 children: [
                   // App Title
-                  const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.list, size: 32, color: Colors.white),
-                          SizedBox(width: 16),
-                          Text(
-                            'TO-DO LIST',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        'Login to your account.',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
+                  AuthScreenHeader(
+                    title: 'TO-DO LIST',
+                    subtitle: 'Login to your account',
                   ),
 
                   // Login Form
@@ -232,8 +214,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
 
           // Loading overlay
-          if (authState.isLoading)
-            AuthLoadingOverlay(message: 'Loading...',),
+          if (authState.isLoading) AuthLoadingOverlay(message: 'Loading...'),
         ],
       ),
     );

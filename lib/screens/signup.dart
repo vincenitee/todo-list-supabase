@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_list_supabase/screens/login.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
+import 'package:todo_list_supabase/widgets/auth_screen_header.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
 
@@ -34,31 +35,9 @@ class SignupScreenState extends State<SignupScreen> {
               child: Column(
                 children: [
                   // App Title
-                  const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.list, size: 32, color: Colors.white),
-                          SizedBox(width: 16),
-                          Text(
-                            'TO-DO LIST',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      Text(
-                        'Create an account.',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
+                  AuthScreenHeader(
+                    title: 'TO-DO LIST',
+                    subtitle: 'Create an account.',
                   ),
 
                   // Signup Form
