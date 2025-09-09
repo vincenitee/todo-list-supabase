@@ -233,7 +233,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
           // Loading overlay
           if (authState.isLoading)
-            AuthLoadingOverlay(),
+            AuthLoadingOverlay(message: 'Loading...',),
         ],
       ),
     );

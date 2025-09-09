@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AuthLoadingOverlay extends StatelessWidget {
-  const AuthLoadingOverlay({super.key});
+  final String message;
+
+  const AuthLoadingOverlay({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black.withValues(alpha: 0.3),
-      child: const Center(
+      child: Center(
         child: Card(
           child: Padding(
             padding: EdgeInsets.all(20),
@@ -16,7 +18,7 @@ class AuthLoadingOverlay extends StatelessWidget {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(height: 16),
-                Text('Logging in...'),
+                Text(message),
               ],
             ),
           ),
