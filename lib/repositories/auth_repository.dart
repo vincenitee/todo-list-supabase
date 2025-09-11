@@ -18,12 +18,13 @@ class AuthRepository {
       );
 
       final user = response.user;
+
       if (user != null) {
         // Create profile after successful auth signup
         await client.from('profiles').insert({
           'user_id': user.id,
           'username': username,
-        });
+        }).select();
       } else {
         throw AuthException('Sign up failed: No user returned');
       }

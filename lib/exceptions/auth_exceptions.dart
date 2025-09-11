@@ -52,8 +52,17 @@ class EmailAlreadyInUseException extends AuthException {
   );
 }
 
+class AnonymousSignInException extends AuthException {
+  const AnonymousSignInException() : super(
+    'Anonymous sign-in is not allowed. Please sign in with an email and password.',
+    'anonymous-sign-in',
+  );
+}
+
+
 class AuthErrorMapper {
   static AuthException mapError(dynamic error) {
+    print(error.toString().toLowerCase());
     // Already user-friendly
     if (error is AuthException) {
       return error;
@@ -77,6 +86,9 @@ class AuthErrorMapper {
       }
       if (msg.contains('email already registered')) {
         return const EmailAlreadyInUseException();
+      }
+      if(msg.contains('anonymous sign-ins are disabled')) {
+        return const AnonymousSignInException();
       }
     }
 

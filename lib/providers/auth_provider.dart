@@ -46,6 +46,19 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  // Sign Up
+  Future<void> signup(String email, String username, String password) async {
+    state = AsyncValue.loading();
+
+    try {
+      final response = await _repository.signUp(email, username, password);
+      state = AsyncValue.data(response.user);
+    } catch (error) {
+      final friendlyError = AuthErrorMapper.mapError(error);
+      state = AsyncValue.error(friendlyError, StackTrace.current);
+    }
+  }
+
   // Update Profile
   Future<void> updateProfile(
     String email,
