@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_list_supabase/providers/auth_provider.dart';
+import 'package:todo_list_supabase/screens/login.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _profileFormKey = GlobalKey<FormState>();
 
   String _username = '';
   String _email = '';
   String _password = '';
 
+  void handleSignOut() async {}
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(authNotifierProvider, (previous, next) {
+      next.when(
+        data: (user) =>
+            user ??
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => LoginScreen()),
+            ),
+        loading: () {},
+        error: (_, _) {},
+      );
+    });
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -74,7 +91,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     label: 'Sign out',
                     icon: Icons.logout,
                     backgroundColor: Colors.red,
-                    onPressed: () {},
+                    onPressed: () {
+                      ref.read(authNotifierProvider.notifier).signOut();
+                    },
                   ),
                 ],
               ),
