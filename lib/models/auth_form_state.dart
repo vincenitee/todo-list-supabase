@@ -14,5 +14,11 @@ abstract class AuthFormState with _$AuthFormState {
     @Default(false) bool obscureConfirmPassword,
     String? successMessage,
     String? errorMessage,
+    String? emailError,
+    String? passwordError,
+    String? confirmPasswordError,
+    String? usernameError,
   }) = _AuthFormState;
 }
+
+

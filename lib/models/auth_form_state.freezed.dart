@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AuthFormState {
 
- String get email; String get username; String get password; String get confirmPassword; bool get isLoading; bool get obscurePassword; bool get obscureConfirmPassword; String? get successMessage; String? get errorMessage;
+ String get email; String get username; String get password; String get confirmPassword; bool get isLoading; bool get obscurePassword; bool get obscureConfirmPassword; String? get successMessage; String? get errorMessage; String? get emailError; String? get passwordError; String? get confirmPasswordError; String? get usernameError;
 /// Create a copy of AuthFormState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AuthFormStateCopyWith<AuthFormState> get copyWith => _$AuthFormStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthFormState&&(identical(other.email, email) || other.email == email)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.confirmPassword, confirmPassword) || other.confirmPassword == confirmPassword)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.obscurePassword, obscurePassword) || other.obscurePassword == obscurePassword)&&(identical(other.obscureConfirmPassword, obscureConfirmPassword) || other.obscureConfirmPassword == obscureConfirmPassword)&&(identical(other.successMessage, successMessage) || other.successMessage == successMessage)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthFormState&&(identical(other.email, email) || other.email == email)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.confirmPassword, confirmPassword) || other.confirmPassword == confirmPassword)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.obscurePassword, obscurePassword) || other.obscurePassword == obscurePassword)&&(identical(other.obscureConfirmPassword, obscureConfirmPassword) || other.obscureConfirmPassword == obscureConfirmPassword)&&(identical(other.successMessage, successMessage) || other.successMessage == successMessage)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.emailError, emailError) || other.emailError == emailError)&&(identical(other.passwordError, passwordError) || other.passwordError == passwordError)&&(identical(other.confirmPasswordError, confirmPasswordError) || other.confirmPasswordError == confirmPasswordError)&&(identical(other.usernameError, usernameError) || other.usernameError == usernameError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,email,username,password,confirmPassword,isLoading,obscurePassword,obscureConfirmPassword,successMessage,errorMessage);
+int get hashCode => Object.hash(runtimeType,email,username,password,confirmPassword,isLoading,obscurePassword,obscureConfirmPassword,successMessage,errorMessage,emailError,passwordError,confirmPasswordError,usernameError);
 
 @override
 String toString() {
-  return 'AuthFormState(email: $email, username: $username, password: $password, confirmPassword: $confirmPassword, isLoading: $isLoading, obscurePassword: $obscurePassword, obscureConfirmPassword: $obscureConfirmPassword, successMessage: $successMessage, errorMessage: $errorMessage)';
+  return 'AuthFormState(email: $email, username: $username, password: $password, confirmPassword: $confirmPassword, isLoading: $isLoading, obscurePassword: $obscurePassword, obscureConfirmPassword: $obscureConfirmPassword, successMessage: $successMessage, errorMessage: $errorMessage, emailError: $emailError, passwordError: $passwordError, confirmPasswordError: $confirmPasswordError, usernameError: $usernameError)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AuthFormStateCopyWith<$Res>  {
   factory $AuthFormStateCopyWith(AuthFormState value, $Res Function(AuthFormState) _then) = _$AuthFormStateCopyWithImpl;
 @useResult
 $Res call({
- String email, String username, String password, String confirmPassword, bool isLoading, bool obscurePassword, bool obscureConfirmPassword, String? successMessage, String? errorMessage
+ String email, String username, String password, String confirmPassword, bool isLoading, bool obscurePassword, bool obscureConfirmPassword, String? successMessage, String? errorMessage, String? emailError, String? passwordError, String? confirmPasswordError, String? usernameError
 });
 
 
@@ -62,7 +62,7 @@ class _$AuthFormStateCopyWithImpl<$Res>
 
 /// Create a copy of AuthFormState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? username = null,Object? password = null,Object? confirmPassword = null,Object? isLoading = null,Object? obscurePassword = null,Object? obscureConfirmPassword = null,Object? successMessage = freezed,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? username = null,Object? password = null,Object? confirmPassword = null,Object? isLoading = null,Object? obscurePassword = null,Object? obscureConfirmPassword = null,Object? successMessage = freezed,Object? errorMessage = freezed,Object? emailError = freezed,Object? passwordError = freezed,Object? confirmPasswordError = freezed,Object? usernameError = freezed,}) {
   return _then(_self.copyWith(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
@@ -73,6 +73,10 @@ as bool,obscurePassword: null == obscurePassword ? _self.obscurePassword : obscu
 as bool,obscureConfirmPassword: null == obscureConfirmPassword ? _self.obscureConfirmPassword : obscureConfirmPassword // ignore: cast_nullable_to_non_nullable
 as bool,successMessage: freezed == successMessage ? _self.successMessage : successMessage // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,emailError: freezed == emailError ? _self.emailError : emailError // ignore: cast_nullable_to_non_nullable
+as String?,passwordError: freezed == passwordError ? _self.passwordError : passwordError // ignore: cast_nullable_to_non_nullable
+as String?,confirmPasswordError: freezed == confirmPasswordError ? _self.confirmPasswordError : confirmPasswordError // ignore: cast_nullable_to_non_nullable
+as String?,usernameError: freezed == usernameError ? _self.usernameError : usernameError // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -158,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String username,  String password,  String confirmPassword,  bool isLoading,  bool obscurePassword,  bool obscureConfirmPassword,  String? successMessage,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String username,  String password,  String confirmPassword,  bool isLoading,  bool obscurePassword,  bool obscureConfirmPassword,  String? successMessage,  String? errorMessage,  String? emailError,  String? passwordError,  String? confirmPasswordError,  String? usernameError)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AuthFormState() when $default != null:
-return $default(_that.email,_that.username,_that.password,_that.confirmPassword,_that.isLoading,_that.obscurePassword,_that.obscureConfirmPassword,_that.successMessage,_that.errorMessage);case _:
+return $default(_that.email,_that.username,_that.password,_that.confirmPassword,_that.isLoading,_that.obscurePassword,_that.obscureConfirmPassword,_that.successMessage,_that.errorMessage,_that.emailError,_that.passwordError,_that.confirmPasswordError,_that.usernameError);case _:
   return orElse();
 
 }
@@ -179,10 +183,10 @@ return $default(_that.email,_that.username,_that.password,_that.confirmPassword,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String username,  String password,  String confirmPassword,  bool isLoading,  bool obscurePassword,  bool obscureConfirmPassword,  String? successMessage,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String username,  String password,  String confirmPassword,  bool isLoading,  bool obscurePassword,  bool obscureConfirmPassword,  String? successMessage,  String? errorMessage,  String? emailError,  String? passwordError,  String? confirmPasswordError,  String? usernameError)  $default,) {final _that = this;
 switch (_that) {
 case _AuthFormState():
-return $default(_that.email,_that.username,_that.password,_that.confirmPassword,_that.isLoading,_that.obscurePassword,_that.obscureConfirmPassword,_that.successMessage,_that.errorMessage);case _:
+return $default(_that.email,_that.username,_that.password,_that.confirmPassword,_that.isLoading,_that.obscurePassword,_that.obscureConfirmPassword,_that.successMessage,_that.errorMessage,_that.emailError,_that.passwordError,_that.confirmPasswordError,_that.usernameError);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +203,10 @@ return $default(_that.email,_that.username,_that.password,_that.confirmPassword,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String username,  String password,  String confirmPassword,  bool isLoading,  bool obscurePassword,  bool obscureConfirmPassword,  String? successMessage,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String username,  String password,  String confirmPassword,  bool isLoading,  bool obscurePassword,  bool obscureConfirmPassword,  String? successMessage,  String? errorMessage,  String? emailError,  String? passwordError,  String? confirmPasswordError,  String? usernameError)?  $default,) {final _that = this;
 switch (_that) {
 case _AuthFormState() when $default != null:
-return $default(_that.email,_that.username,_that.password,_that.confirmPassword,_that.isLoading,_that.obscurePassword,_that.obscureConfirmPassword,_that.successMessage,_that.errorMessage);case _:
+return $default(_that.email,_that.username,_that.password,_that.confirmPassword,_that.isLoading,_that.obscurePassword,_that.obscureConfirmPassword,_that.successMessage,_that.errorMessage,_that.emailError,_that.passwordError,_that.confirmPasswordError,_that.usernameError);case _:
   return null;
 
 }
@@ -214,7 +218,7 @@ return $default(_that.email,_that.username,_that.password,_that.confirmPassword,
 
 
 class _AuthFormState implements AuthFormState {
-  const _AuthFormState({this.email = '', this.username = '', this.password = '', this.confirmPassword = '', this.isLoading = false, this.obscurePassword = false, this.obscureConfirmPassword = false, this.successMessage, this.errorMessage});
+  const _AuthFormState({this.email = '', this.username = '', this.password = '', this.confirmPassword = '', this.isLoading = false, this.obscurePassword = false, this.obscureConfirmPassword = false, this.successMessage, this.errorMessage, this.emailError, this.passwordError, this.confirmPasswordError, this.usernameError});
   
 
 @override@JsonKey() final  String email;
@@ -226,6 +230,10 @@ class _AuthFormState implements AuthFormState {
 @override@JsonKey() final  bool obscureConfirmPassword;
 @override final  String? successMessage;
 @override final  String? errorMessage;
+@override final  String? emailError;
+@override final  String? passwordError;
+@override final  String? confirmPasswordError;
+@override final  String? usernameError;
 
 /// Create a copy of AuthFormState
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +245,16 @@ _$AuthFormStateCopyWith<_AuthFormState> get copyWith => __$AuthFormStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthFormState&&(identical(other.email, email) || other.email == email)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.confirmPassword, confirmPassword) || other.confirmPassword == confirmPassword)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.obscurePassword, obscurePassword) || other.obscurePassword == obscurePassword)&&(identical(other.obscureConfirmPassword, obscureConfirmPassword) || other.obscureConfirmPassword == obscureConfirmPassword)&&(identical(other.successMessage, successMessage) || other.successMessage == successMessage)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthFormState&&(identical(other.email, email) || other.email == email)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.confirmPassword, confirmPassword) || other.confirmPassword == confirmPassword)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.obscurePassword, obscurePassword) || other.obscurePassword == obscurePassword)&&(identical(other.obscureConfirmPassword, obscureConfirmPassword) || other.obscureConfirmPassword == obscureConfirmPassword)&&(identical(other.successMessage, successMessage) || other.successMessage == successMessage)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.emailError, emailError) || other.emailError == emailError)&&(identical(other.passwordError, passwordError) || other.passwordError == passwordError)&&(identical(other.confirmPasswordError, confirmPasswordError) || other.confirmPasswordError == confirmPasswordError)&&(identical(other.usernameError, usernameError) || other.usernameError == usernameError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,email,username,password,confirmPassword,isLoading,obscurePassword,obscureConfirmPassword,successMessage,errorMessage);
+int get hashCode => Object.hash(runtimeType,email,username,password,confirmPassword,isLoading,obscurePassword,obscureConfirmPassword,successMessage,errorMessage,emailError,passwordError,confirmPasswordError,usernameError);
 
 @override
 String toString() {
-  return 'AuthFormState(email: $email, username: $username, password: $password, confirmPassword: $confirmPassword, isLoading: $isLoading, obscurePassword: $obscurePassword, obscureConfirmPassword: $obscureConfirmPassword, successMessage: $successMessage, errorMessage: $errorMessage)';
+  return 'AuthFormState(email: $email, username: $username, password: $password, confirmPassword: $confirmPassword, isLoading: $isLoading, obscurePassword: $obscurePassword, obscureConfirmPassword: $obscureConfirmPassword, successMessage: $successMessage, errorMessage: $errorMessage, emailError: $emailError, passwordError: $passwordError, confirmPasswordError: $confirmPasswordError, usernameError: $usernameError)';
 }
 
 
@@ -257,7 +265,7 @@ abstract mixin class _$AuthFormStateCopyWith<$Res> implements $AuthFormStateCopy
   factory _$AuthFormStateCopyWith(_AuthFormState value, $Res Function(_AuthFormState) _then) = __$AuthFormStateCopyWithImpl;
 @override @useResult
 $Res call({
- String email, String username, String password, String confirmPassword, bool isLoading, bool obscurePassword, bool obscureConfirmPassword, String? successMessage, String? errorMessage
+ String email, String username, String password, String confirmPassword, bool isLoading, bool obscurePassword, bool obscureConfirmPassword, String? successMessage, String? errorMessage, String? emailError, String? passwordError, String? confirmPasswordError, String? usernameError
 });
 
 
@@ -274,7 +282,7 @@ class __$AuthFormStateCopyWithImpl<$Res>
 
 /// Create a copy of AuthFormState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? username = null,Object? password = null,Object? confirmPassword = null,Object? isLoading = null,Object? obscurePassword = null,Object? obscureConfirmPassword = null,Object? successMessage = freezed,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? username = null,Object? password = null,Object? confirmPassword = null,Object? isLoading = null,Object? obscurePassword = null,Object? obscureConfirmPassword = null,Object? successMessage = freezed,Object? errorMessage = freezed,Object? emailError = freezed,Object? passwordError = freezed,Object? confirmPasswordError = freezed,Object? usernameError = freezed,}) {
   return _then(_AuthFormState(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
@@ -285,6 +293,10 @@ as bool,obscurePassword: null == obscurePassword ? _self.obscurePassword : obscu
 as bool,obscureConfirmPassword: null == obscureConfirmPassword ? _self.obscureConfirmPassword : obscureConfirmPassword // ignore: cast_nullable_to_non_nullable
 as bool,successMessage: freezed == successMessage ? _self.successMessage : successMessage // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,emailError: freezed == emailError ? _self.emailError : emailError // ignore: cast_nullable_to_non_nullable
+as String?,passwordError: freezed == passwordError ? _self.passwordError : passwordError // ignore: cast_nullable_to_non_nullable
+as String?,confirmPasswordError: freezed == confirmPasswordError ? _self.confirmPasswordError : confirmPasswordError // ignore: cast_nullable_to_non_nullable
+as String?,usernameError: freezed == usernameError ? _self.usernameError : usernameError // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

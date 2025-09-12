@@ -62,7 +62,6 @@ class AnonymousSignInException extends AuthException {
 
 class AuthErrorMapper {
   static AuthException mapError(dynamic error) {
-    print(error.toString().toLowerCase());
     // Already user-friendly
     if (error is AuthException) {
       return error;

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String label;
+  final String? errorText;
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final void Function()? onSuffixIconPressed;
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
+  final void Function(String)? onChanged;
   final bool isPassword;
   final bool enabled;
 
@@ -16,12 +18,14 @@ class CustomTextField extends StatefulWidget {
     super.key,
     this.controller,
     this.label = '',
+    this.errorText,
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
     this.onSuffixIconPressed,
     this.validator,
     this.onSaved,
+    this.onChanged,
     this.isPassword = false,
     this.enabled = true, // Default to false
   });
@@ -31,16 +35,20 @@ class CustomTextField extends StatefulWidget {
     Key? key,
     TextEditingController? controller,
     String label = 'Email',
+    String? errorText,
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
+    void Function(String)? onChanged,
     bool enabled = true,
   }) {
     return CustomTextField(
       key: key,
       controller: controller,
       label: label,
+      errorText: errorText,
       validator: validator ?? _defaultEmailValidator,
       onSaved: onSaved,
+      onChanged: onChanged,
       enabled: enabled,
     );
   }
@@ -50,17 +58,21 @@ class CustomTextField extends StatefulWidget {
     Key? key,
     TextEditingController? controller,
     String label = 'Password',
+    String? errorText,
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
+    void Function(String)? onChanged,
     bool enabled = true,
   }) {
     return CustomTextField(
       key: key,
       controller: controller,
       label: label,
+      errorText: errorText,
       isPassword: true,
       validator: validator ?? _defaultPasswordValidator,
       onSaved: onSaved,
+      onChanged: onChanged,
       enabled: enabled,
     );
   }
@@ -70,16 +82,20 @@ class CustomTextField extends StatefulWidget {
     Key? key,
     TextEditingController? controller,
     String label = 'Username',
+    String? errorText,
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
+    void Function(String)? onChanged,
     bool enabled = true,
   }){
     return CustomTextField(
       key: key,
       controller: controller,
       label: label,
+      errorText: errorText,
       validator: validator ?? _defaultUsernameValidator,
       onSaved: onSaved,
+      onChanged: onChanged,
       enabled: enabled,
     );
   }
@@ -162,10 +178,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       onPressed: widget.onSuffixIconPressed,
                     )
                   : null),
+        errorText: widget.errorText,
       ),
 
       validator: widget.validator ?? widget._defaultTextFieldValidator,
       onSaved: widget.onSaved,
+      onChanged: widget.onChanged,
     );
   }
 }

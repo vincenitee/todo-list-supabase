@@ -35,6 +35,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         error: (_, _) {},
       );
     });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),

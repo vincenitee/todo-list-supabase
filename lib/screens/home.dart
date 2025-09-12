@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_list_supabase/models/task.dart';
+import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/screens/profile.dart';
 import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
@@ -7,14 +10,14 @@ import 'package:todo_list_supabase/widgets/task_dialog.dart';
 import 'package:todo_list_supabase/widgets/task_list.dart';
 import 'package:todo_list_supabase/widgets/task_list_header.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final List<Task> tasks = [
     Task(
       id: 1,
@@ -60,6 +63,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(authNotifierProvider, (previous, next) {
+      next.whenData((user) {
+        if (user != null && previous?.value == null) {
+          Fluttertoast.showToast(msg: 'Login successful');
+        }
+      });
+    });
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade700,
@@ -77,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => ProfileScreen()),

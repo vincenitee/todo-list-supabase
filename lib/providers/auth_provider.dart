@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/providers/auth_repository_provider.dart';
 import 'package:todo_list_supabase/repositories/auth_repository.dart';
-import 'package:todo_list_supabase/exceptions/auth_exceptions.dart'; // Import the new file
+import 'package:todo_list_supabase/exceptions/auth_exceptions.dart';
 
 part 'auth_provider.g.dart';
 
@@ -17,38 +17,38 @@ class AuthNotifier extends _$AuthNotifier {
     return _repository.getCurrentUser();
   }
 
-  // Sign In
+  // Sign In - now called by AuthForm
   Future<void> signIn(String email, String password) async {
-    // Sets to loading state
-    state = AsyncValue.loading();
+    state = const AsyncValue.loading();
 
     try {
       final response = await _repository.signIn(email, password);
       final user = response.user;
-
       state = AsyncValue.data(user);
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
+      rethrow; // Re-throw so AuthForm can handle the error in its own state
     }
   }
 
   // Sign Out
   Future<void> signOut() async {
-    state = AsyncValue.loading();
+    state = const AsyncValue.loading();
 
     try {
       await _repository.signOut();
-      state = AsyncValue.data(null);
+      state = const AsyncValue.data(null);
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
+      rethrow;
     }
   }
 
-  // Sign Up
+  // Sign Up - now called by AuthForm
   Future<void> signup(String email, String username, String password) async {
-    state = AsyncValue.loading();
+    state = const AsyncValue.loading();
 
     try {
       final response = await _repository.signUp(email, username, password);
@@ -56,16 +56,17 @@ class AuthNotifier extends _$AuthNotifier {
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
+      rethrow; // Re-throw so AuthForm can handle the error in its own state
     }
   }
 
-  // Update Profile
+  // Update Profile - now called by AuthForm
   Future<void> updateProfile(
     String email,
     String username,
     String password,
   ) async {
-    state = AsyncValue.loading();
+    state = const AsyncValue.loading();
 
     try {
       final updatedUser = await _repository.updateInformation(
@@ -78,6 +79,7 @@ class AuthNotifier extends _$AuthNotifier {
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
+      rethrow; // Re-throw so AuthForm can handle the error in its own state
     }
   }
 }
