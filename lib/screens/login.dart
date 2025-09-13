@@ -20,32 +20,32 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _loginFormKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     // Creates an independent instance for login
-    final formState = ref.watch(authFormProvider('login'));
-    final formNotifier = ref.read(authFormProvider('login').notifier);
+    final loginFormState = ref.watch(authFormProvider('login'));
+    final loginFormNotifier = ref.read(authFormProvider('login').notifier);
 
     // Listen to the actual authentication state for navigation
     ref.listen(authNotifierProvider, (previous, next) {
       // If authenticated move to Home Screen
       next.when(
         data: (user) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => HomeScreen()),
-          );
-        },
-
-        error: (error, stacktrace) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Error: ${error.toString()}')));
+          if (user != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => HomeScreen()),
+            );
+          }
         },
 
         loading: () {},
+
+        error: (e, st) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(e.toString())));
+        },
       );
     });
 
@@ -74,45 +74,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   // Login Form
                   FormContainer(
                     child: Form(
-                      key: _loginFormKey,
                       child: Column(
                         children: [
-                          if (formState.errorMessage != null)
-                            ErrorBanner(errorMessage: formState.errorMessage!),
+                          if (loginFormState.errorMessage != null)
+                            ErrorBanner(
+                              errorMessage: loginFormState.errorMessage!,
+                            ),
 
                           // Email TextField
                           CustomTextField.email(
-                            onChanged: formNotifier.updateEmail,
-                            errorText: formState.emailError,
+                            onChanged: loginFormNotifier.updateEmail,
+                            errorText: loginFormState.emailError,
                           ),
 
                           const SizedBox(height: 20),
 
                           // Password TextField
                           CustomTextField.password(
-                            onChanged: formNotifier.updatePassword,
-                            errorText: formState.passwordError,
+                            onChanged: loginFormNotifier.updatePassword,
+                            errorText: loginFormState.passwordError,
                           ),
 
                           const SizedBox(height: 20),
 
                           // Login Button - reactive to loading state
                           AuthButton(
-                            label: formState.isLoading
+                            label: loginFormState.isLoading
                                 ? 'Logging in'
                                 : 'Log in',
-                            icon: formState.isLoading
+                            icon: loginFormState.isLoading
                                 ? Icons.hourglass_empty
                                 : Icons.login,
-                            onPressed: formState.isLoading
+                            onPressed: loginFormState.isLoading
                                 ? () {}
-                                : formNotifier.submitLogin,
+                                : loginFormNotifier.submitLogin,
                           ),
 
                           AuthNavigationRow(
                             text: 'Don\'t have an account?',
                             linkText: 'Sign up',
-                            onPressed: formState.isLoading
+                            onPressed: loginFormState.isLoading
                                 ? () {}
                                 : () {
                                     Navigator.push(
@@ -133,7 +134,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
 
           // Loading overlay
-          if (formState.isLoading) AuthLoadingOverlay(message: 'Loading...'),
+          if (loginFormState.isLoading)
+            AuthLoadingOverlay(message: 'Loading...'),
         ],
       ),
     );

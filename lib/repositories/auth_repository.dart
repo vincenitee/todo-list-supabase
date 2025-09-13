@@ -15,19 +15,17 @@ class AuthRepository {
       final response = await client.auth.signUp(
         email: email,
         password: password,
+        data: {'username': username},
       );
 
       final user = response.user;
 
-      if (user != null) {
-        // Create profile after successful auth signup
-        await client.from('profiles').insert({
-          'user_id': user.id,
-          'username': username,
-        }).select();
-      } else {
-        throw AuthException('Sign up failed: No user returned');
-      }
+      if (user == null) throw AuthException('Sign up failed: No user returned');
+
+      // Check if profile row is inserted successfully
+      final profiles = await client.from('profiles').select().eq('id', user.id);
+
+      print(profiles); // This will be a list
 
       return response;
     } on AuthException {
@@ -83,7 +81,8 @@ class AuthRepository {
       );
 
       final user = response.user;
-      if (user == null) throw AuthException('Failed to update user authentication');
+      if (user == null)
+        throw AuthException('Failed to update user authentication');
 
       // Update profile information
       await client

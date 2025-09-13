@@ -59,9 +59,17 @@ class AnonymousSignInException extends AuthException {
   );
 }
 
+class UserAlreadyRegisteredException extends AuthException {
+  const UserAlreadyRegisteredException() : super(
+    'User is already registered',
+    'user-already-exists',
+  );
+}
+
 
 class AuthErrorMapper {
   static AuthException mapError(dynamic error) {
+    print(error.message.toString());
     // Already user-friendly
     if (error is AuthException) {
       return error;
@@ -88,6 +96,9 @@ class AuthErrorMapper {
       }
       if(msg.contains('anonymous sign-ins are disabled')) {
         return const AnonymousSignInException();
+      }
+      if(msg.contains('user already registered')) {
+        return const UserAlreadyRegisteredException();
       }
     }
 

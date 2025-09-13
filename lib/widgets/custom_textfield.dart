@@ -77,6 +77,29 @@ class CustomTextField extends StatefulWidget {
     );
   }
 
+  factory CustomTextField.confirmPassword({
+    Key? key,
+    TextEditingController? controller,
+    String label = 'Confirm Password',
+    String? errorText,
+    String? Function(String?)? validator,
+    void Function(String?)? onSaved,
+    void Function(String)? onChanged,
+    bool enabled = true,
+  }) {
+    return CustomTextField(
+      key: key,
+      controller: controller,
+      label: label,
+      errorText: errorText,
+      isPassword: true,
+      validator: validator ?? _defaultPasswordValidator,
+      onSaved: onSaved,
+      onChanged: onChanged,
+      enabled: enabled,
+    );
+  }
+
   // Username
   factory CustomTextField.username({
     Key? key,

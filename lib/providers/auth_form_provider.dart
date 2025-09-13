@@ -72,8 +72,11 @@ class AuthForm extends _$AuthForm {
       reset();
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
-      state = state.copyWith(isLoading: false, errorMessage: friendlyError.message);
-    } 
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: friendlyError.message,
+      );
+    }
   }
 
   Future<void> submitSignup() async {
@@ -95,7 +98,11 @@ class AuthForm extends _$AuthForm {
         );
       }
     } catch (error) {
-      state = state.copyWith(isLoading: false, errorMessage: error.toString());
+      final friendlyError = AuthErrorMapper.mapError(error);
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: friendlyError.message,
+      );
     }
   }
 
@@ -119,71 +126,77 @@ class AuthForm extends _$AuthForm {
   }
 
   bool _validateLogin() {
-    bool isLoginValid = false;
+    bool isLoginValid = true;
+
+    // Reset errors before validating
+    state = state.copyWith(emailError: null, passwordError: null);
 
     if (state.email.isEmpty) {
       state = state.copyWith(emailError: 'Email is required');
+      isLoginValid = false;
+    } else if (!_isValidEmail(state.email)) {
+      state = state.copyWith(emailError: 'Please enter a valid email');
+      isLoginValid = false;
     }
 
     if (state.password.isEmpty) {
       state = state.copyWith(passwordError: 'Password is required');
-    }
-
-    if (!_isValidEmail(state.email)) {
-      state = state.copyWith(emailError: 'Please enter a valid email');
-    }
-
-    if (
-        state.email.isNotEmpty &&
-        state.password.isNotEmpty &&
-        _isValidEmail(state.email)
-    ) {
-      isLoginValid = true;
+      isLoginValid = false;
     }
 
     return isLoginValid;
   }
 
   bool _validateSignup() {
+    bool isSignupValid = true;
+
+    // Reset errors before validating
+    state = state.copyWith(
+      emailError: null,
+      usernameError: null,
+      passwordError: null,
+      confirmPasswordError: null,
+    );
+
     if (state.email.isEmpty) {
       state = state.copyWith(emailError: 'Email is required');
-      return false;
+      isSignupValid = false;
+    } else if (!_isValidEmail(state.email)) {
+      state = state.copyWith(emailError: 'Please enter a valid email');
+      isSignupValid = false;
     }
+
     if (state.username.isEmpty) {
       state = state.copyWith(usernameError: 'Username is required');
-      return false;
+      isSignupValid = false;
+    } else if (state.username.length < 3) {
+      state = state.copyWith(
+        usernameError: 'Username must be at least 3 characters',
+      );
+      isSignupValid = false;
     }
+
     if (state.password.isEmpty) {
       state = state.copyWith(passwordError: 'Password is required');
-      return false;
+      isSignupValid = false;
+    } else if (state.password.length < 6) {
+      state = state.copyWith(
+        passwordError: 'Password must be at least 6 characters',
+      );
+      isSignupValid = false;
     }
+
     if (state.confirmPassword.isEmpty) {
       state = state.copyWith(
         confirmPasswordError: 'Please confirm your password',
       );
-      return false;
-    }
-    if (!_isValidEmail(state.email)) {
-      state = state.copyWith(emailError: 'Please enter a valid email');
-      return false;
-    }
-    if (state.password.length < 6) {
-      state = state.copyWith(
-        passwordError: 'Password must be at least 6 characters',
-      );
-      return false;
-    }
-    if (state.password != state.confirmPassword) {
+      isSignupValid = false;
+    } else if (state.password != state.confirmPassword) {
       state = state.copyWith(confirmPasswordError: 'Passwords do not match');
-      return false;
+      isSignupValid = false;
     }
-    if (state.username.length < 3) {
-      state = state.copyWith(
-        usernameError: 'Username must be at least 3 characters',
-      );
-      return false;
-    }
-    return true;
+
+    return isSignupValid;
   }
 
   bool _validateProfileUpdate() {

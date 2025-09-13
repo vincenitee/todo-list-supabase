@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_list_supabase/providers/auth_form_provider.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/screens/home.dart';
 import 'package:todo_list_supabase/screens/login.dart';
@@ -8,6 +9,7 @@ import 'package:todo_list_supabase/widgets/auth_loading_overlay.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
 import 'package:todo_list_supabase/widgets/auth_screen_header.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
+import 'package:todo_list_supabase/widgets/error_banner.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
@@ -18,46 +20,21 @@ class SignupScreen extends ConsumerStatefulWidget {
 }
 
 class SignupScreenState extends ConsumerState<SignupScreen> {
-  final _signupFormKey = GlobalKey<FormState>();
-
-  String _email = '';
-  String _password = '';
-  String _username = '';
-
-  void _handleSignUp() async {
-    if (_signupFormKey.currentState!.validate()) {
-      _signupFormKey.currentState!.save();
-
-      await ref
-          .read(authNotifierProvider.notifier)
-          .signup(_email, _username, _password);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authNotifierProvider);
+    // Creates an INDEPENDENT instance for signup
+    final signupFormState = ref.watch(authFormProvider('signup'));
+    final signupFormNotifier = ref.read(authFormProvider('signup').notifier);
 
     ref.listen(authNotifierProvider, (previous, next) {
-      next.when(
-        data: (user) {
-          if (user != null) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
-          }
-        },
-        error: (error, stackTrace) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Failed to register user: ${error.toString()}'),
-              backgroundColor: Colors.red,
-            ),
+      next.whenData((user) {
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => HomeScreen()),
           );
-        },
-        loading: () {},
-      );
+        }
+      });
     });
 
     return Scaffold(
@@ -85,53 +62,54 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                   // Signup Form
                   FormContainer(
                     child: Form(
-                      key: _signupFormKey,
                       child: Column(
                         children: [
+                          if(signupFormState.errorMessage != null) 
+                            ErrorBanner(errorMessage: signupFormState.errorMessage!),
+
                           // Email TextField
                           CustomTextField.email(
-                            onSaved: (value) {
-                              _email = value ?? '';
-                            },
+                            onChanged: signupFormNotifier.updateEmail,
+                            errorText: signupFormState.emailError,
                           ),
 
                           const SizedBox(height: 20),
 
                           // Username TextField
                           CustomTextField.username(
-                            onSaved: (value) {
-                              _username = value ?? '';
-                            },
+                            onChanged: signupFormNotifier.updateUsername,
+                            errorText: signupFormState.usernameError,
                           ),
 
                           const SizedBox(height: 20),
 
                           // Password TextField
                           CustomTextField.password(
-                            onSaved: (value) {
-                              _password = value ?? '';
-                            },
+                            onChanged: signupFormNotifier.updatePassword,
+                            errorText: signupFormState.passwordError,
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          // Password TextField
+                          CustomTextField.confirmPassword(
+                            onChanged: signupFormNotifier.updateConfirmPassword,
+                            errorText: signupFormState.confirmPasswordError,
                           ),
 
                           const SizedBox(height: 20),
 
                           // Signup Button
-                          authState.when(
-                            data: (_) => AuthButton(
-                              label: 'Sign up',
-                              icon: Icons.person_add,
-                              onPressed: _handleSignUp,
-                            ),
-                            error: (_, _) => AuthButton(
-                              label: 'Sign up',
-                              icon: Icons.person_add,
-                              onPressed: _handleSignUp,
-                            ),
-                            loading: () => AuthButton(
-                              label: 'Signing in...',
-                              icon: Icons.hourglass_empty,
-                              onPressed: () {},
-                            ),
+                          AuthButton(
+                            label: signupFormState.isLoading
+                                ? 'Signing up'
+                                : 'Sign up',
+                            icon: signupFormState.isLoading
+                                ? Icons.hourglass_empty
+                                : Icons.person_add,
+                            onPressed: signupFormState.isLoading
+                                ? () {}
+                                : signupFormNotifier.submitSignup,
                           ),
 
                           AuthNavigationRow(
@@ -155,8 +133,8 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
 
-          if (authState.isLoading)
-            AuthLoadingOverlay(message: 'Signing you in...'),
+          if (signupFormState.isLoading)
+            AuthLoadingOverlay(message: 'Creating your account...'),
         ],
       ),
     );
