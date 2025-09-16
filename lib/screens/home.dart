@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:todo_list_supabase/models/task.dart';
+import 'package:logger/web.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
+import 'package:todo_list_supabase/providers/task_provider.dart';
+import 'package:todo_list_supabase/screens/login.dart';
 import 'package:todo_list_supabase/screens/profile.dart';
 import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
@@ -18,59 +21,29 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final List<Task> tasks = [
-    Task(
-      id: 1,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Buy groceries',
-      isDone: false,
-      createdAt: DateTime.now().subtract(Duration(hours: 5)),
-    ),
-    Task(
-      id: 2,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Study Flutter',
-      isDone: true,
-      createdAt: DateTime.now().subtract(Duration(days: 1)),
-    ),
-    Task(
-      id: 3,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Workout',
-      isDone: false,
-      createdAt: DateTime.now().subtract(Duration(hours: 2)),
-    ),
-    Task(
-      id: 4,
-      userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-      title: 'Read a book',
-      isDone: true,
-      createdAt: DateTime.now().subtract(Duration(days: 3)),
-    ),
-  ];
+  final _log = Logger();
 
-  void _handleTaskSubmission(String taskTitle) {
-    tasks.add(
-      Task(
-        id: 6,
-        userId: 'f4b36c94-2a1f-11ee-be56-0242ac120002',
-        title: taskTitle,
-        isDone: false,
-        createdAt: DateTime.now(),
-      ),
-    );
-  }
+  void _handleTaskSubmission(String taskTitle) {}
 
   @override
   Widget build(BuildContext context) {
+    final tasks = ref.watch(taskNotifierProvider);
+    // final authState = ref.watch(authNotifierProvider);
+
+    // _log.d('Auth State in HomeScreen: $authState');
     ref.listen(authNotifierProvider, (previous, next) {
-      next.whenData((user) {
-        if (user != null && previous?.value == null) {
-          Fluttertoast.showToast(msg: 'Login successful');
-        }
-      });
+      next.when(
+        data: (state) {
+          if(state.event != AuthChangeEvent.signedIn) {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen()));
+          }
+        },
+        error: (_, _) => {},
+        loading: () {},
+      );
     });
-    
+
+    // TODO: REFINE THE AUTH STATE LISTENER TO AVOID UNNECESSARY NAVIGATION
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade700,
@@ -115,14 +88,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             decoration: BoxDecoration(
               color: Colors.white, // Solid background moved to decoration
             ),
-            child: ProgressCard(tasks: tasks),
+            child: ProgressCard(tasks: tasks.value ?? []),
           ),
 
           // Task List Header (Optional)
           Container(
             color: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TaskListHeader(tasksCount: tasks.length),
+            child: TaskListHeader(tasksCount: 0),
           ),
 
           // List of Tasks
@@ -130,10 +103,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Container(
               margin: const EdgeInsets.only(bottom: 20),
               child: TaskList(
-                tasks: tasks,
+                tasks: tasks.value ?? [],
                 onTaskTap: (task) {
                   setState(() {
-                    task.isDone = !task.isDone;
+                    // TODO: IMPLEMENT THE TOGGLING OF TASK STATUS
+                    // task.isDone = !task.isDone;
                   });
                 },
               ),

@@ -23,18 +23,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(authNotifierProvider, (previous, next) {
-      next.when(
-        data: (user) =>
-            user ??
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => LoginScreen()),
-            ),
-        loading: () {},
-        error: (_, _) {},
-      );
-    });
 
     return Scaffold(
       appBar: AppBar(

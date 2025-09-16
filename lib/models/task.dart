@@ -1,34 +1,19 @@
-class Task{
-  final int id;
-  final String userId;
-  final String title;
-  bool isDone;
-  final DateTime createdAt;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Task({
-    required this.id,
-    required this.userId,
-    required this.title,
-    required this.isDone,
-    required this.createdAt,
-  });
-  
-  factory Task.fromMap(Map<String, dynamic> map) {
-    return Task(
-      id: map['id'] as int,
-      userId: map['user_id'] as String,
-      title: map['title'] as String,
-      isDone: map['done'] as bool,
-      createdAt: DateTime.parse(map['created_at'] as String),
-    );
-  }
+part 'task.freezed.dart';
+part 'task.g.dart';
 
-  Map<String, dynamic> toMap() {
-    return {
-      'user_id': userId,
-      'title': title,
-      'done': isDone,
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
+@freezed
+abstract class Task with _$Task {
+  @JsonSerializable(explicitToJson: true)
+  const factory Task({
+    int? id,
+    @JsonKey(name: 'user_id') required String userId,
+    required String title,
+    @JsonKey(name: 'done') required bool isDone,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+  }) = _Task;
+
+  // Convert from JSON to Task
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 }

@@ -12,19 +12,15 @@ class AuthNotifier extends _$AuthNotifier {
 
   // Gets the current user if exists
   @override
-  FutureOr<User?> build() {
+  Stream<AuthState> build() {
     _repository = ref.read(authRepositoryProvider);
-    return _repository.getCurrentUser();
+    return _repository.authStateChanges;
   }
 
   // Sign In - now called by AuthForm
   Future<void> signIn(String email, String password) async {
-    state = const AsyncValue.loading();
-
     try {
-      final response = await _repository.signIn(email, password);
-      final user = response.user;
-      state = AsyncValue.data(user);
+      await _repository.signIn(email, password);
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
@@ -34,11 +30,8 @@ class AuthNotifier extends _$AuthNotifier {
 
   // Sign Out
   Future<void> signOut() async {
-    state = const AsyncValue.loading();
-
     try {
       await _repository.signOut();
-      state = const AsyncValue.data(null);
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
@@ -48,11 +41,8 @@ class AuthNotifier extends _$AuthNotifier {
 
   // Sign Up - now called by AuthForm
   Future<void> signup(String email, String username, String password) async {
-    state = const AsyncValue.loading();
-
     try {
-      final response = await _repository.signUp(email, username, password);
-      state = AsyncValue.data(response.user);
+      await _repository.signUp(email, username, password);
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
@@ -66,16 +56,13 @@ class AuthNotifier extends _$AuthNotifier {
     String username,
     String password,
   ) async {
-    state = const AsyncValue.loading();
 
     try {
-      final updatedUser = await _repository.updateInformation(
+      await _repository.updateInformation(
         email,
         username,
         password,
       );
-
-      state = AsyncValue.data(updatedUser);
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);

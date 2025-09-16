@@ -1,48 +1,89 @@
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/models/task.dart';
 
 class TaskRepository {
+
+  final _log = Logger();
   final SupabaseClient client;
 
   TaskRepository(this.client);
 
-  // Fetches tasks based on the user
-  Future<List<Task>> getTask(String userId) async {
-    // Fetches tasks
-    final response = await client.from('tasks').select().eq('user_id', userId);
+  // Fetches tasks based on the currently authenticated user
+  Future<List<Task>> getTaskForAuthUser() async {
+    final user = await client.auth.getUser();
+    return getTasksByUserId(user.user!.id);
+  }
 
-    // Make sure that it is a List of Maps
-    final data = response as List;
+  // Fetches tasks based on the userId
+  Future<List<Task>> getTasksByUserId(String userId) async {
+    _log.d('Authenticated User ID: $userId');
 
-    // Map data to list of Task
-    return data.map((json) => Task.fromMap(json)).toList();
+    try {
+      // Fetches tasks
+      final response = await client
+          .from('tasks')
+          .select()
+          .eq('user_id', userId);
+
+      
+      // Make sure that it is a List of Maps
+      final data = response as List;
+
+      // Map data to list of Task
+      final tasks = data.map((json) => Task.fromJson(json)).toList();
+      return tasks;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   // Inserts task
   Future<Task?> addTask(Task task) async {
-    final response = await client
-        .from('tasks')
-        .insert(task.toMap())
-        .select()
-        .single();
+    try {
+      final response = await client
+          .from('tasks')
+          .insert(task.toJson())
+          .select()
+          .single();
 
-    return Task.fromMap(response);
+      final newTask = response.isNotEmpty ? Task.fromJson(response) : null;
+
+      return newTask;
+    } catch (e, st) {
+      print('Failed to add task: $e/n$st');
+      rethrow;
+    }
   }
 
   // Toggle task status
   Future<Task?> toggleTaskStatus(Task task) async {
-    final response = await client
-        .from('tasks')
-        .update({'done': !task.isDone})
-        .eq('id', task.id)
-        .select()
-        .single();
+    if(task.id == null) {
+      throw ArgumentError('Task id cannot be null');
+    }
 
-    return Task.fromMap(response);
+    try {
+      final response = await client
+          .from('tasks')
+          .update({'done': !task.isDone})
+          .eq('id', task.id!)
+          .select()
+          .single();
+
+      return Task.fromJson(response);
+
+    } catch (e, st) {
+      print('Failed to toggle task status: $e/n$st');
+      rethrow;
+    }
   }
-  
+
   // Deletes a task
   Future<void> deleteTask(int id) async {
-    await client.from('tasks').delete().eq('id', id);
+    try {
+      await client.from('tasks').delete().eq('id', id);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

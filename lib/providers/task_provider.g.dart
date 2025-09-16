@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_provider.dart';
+part of 'task_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authNotifierHash() => r'e7ae23fdc51f18a6fc4853c3b7f84320cb1a485d';
+String _$taskNotifierHash() => r'713359c435a596f9438bea3bae267d603379eb2e';
 
-/// See also [AuthNotifier].
-@ProviderFor(AuthNotifier)
-final authNotifierProvider =
-    AutoDisposeStreamNotifierProvider<AuthNotifier, AuthState>.internal(
-      AuthNotifier.new,
-      name: r'authNotifierProvider',
+/// See also [TaskNotifier].
+@ProviderFor(TaskNotifier)
+final taskNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<TaskNotifier, List<Task>?>.internal(
+      TaskNotifier.new,
+      name: r'taskNotifierProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$authNotifierHash,
+          : _$taskNotifierHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$AuthNotifier = AutoDisposeStreamNotifier<AuthState>;
+typedef _$TaskNotifier = AutoDisposeAsyncNotifier<List<Task>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

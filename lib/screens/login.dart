@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/web.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/providers/auth_form_provider.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/screens/home.dart';
@@ -30,23 +32,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen(authNotifierProvider, (previous, next) {
       // If authenticated move to Home Screen
       next.when(
-        data: (user) {
-          if (user != null) {
+        data: (state) {
+          Logger().d(state.event);
+
+          if (state.event == AuthChangeEvent.signedIn) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => HomeScreen()),
             );
           }
         },
-
-        loading: () {},
-
         error: (e, st) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(e.toString())));
         },
+        loading: () {},
       );
+
     });
 
     return Scaffold(

@@ -97,6 +97,8 @@ class AuthForm extends _$AuthForm {
           successMessage: 'Signup successful!',
         );
       }
+
+      reset();
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = state.copyWith(

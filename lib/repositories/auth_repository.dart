@@ -81,8 +81,7 @@ class AuthRepository {
       );
 
       final user = response.user;
-      if (user == null)
-        throw AuthException('Failed to update user authentication');
+      if (user == null) throw AuthException('Failed to update user authentication');
 
       // Update profile information
       await client
@@ -105,6 +104,11 @@ class AuthRepository {
   // Get the current user
   User? getCurrentUser() {
     return client.auth.currentUser;
+  }
+
+  // Get current session
+  Session? getCurrentSession() {
+    return client.auth.currentSession;
   }
 
   // Get current user's profile

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/providers/auth_form_provider.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/screens/home.dart';
@@ -27,8 +28,8 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
     final signupFormNotifier = ref.read(authFormProvider('signup').notifier);
 
     ref.listen(authNotifierProvider, (previous, next) {
-      next.whenData((user) {
-        if (user != null) {
+      next.whenData((state) {
+        if (state.event == AuthChangeEvent.signedIn) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => HomeScreen()),
@@ -64,8 +65,10 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                     child: Form(
                       child: Column(
                         children: [
-                          if(signupFormState.errorMessage != null) 
-                            ErrorBanner(errorMessage: signupFormState.errorMessage!),
+                          if (signupFormState.errorMessage != null)
+                            ErrorBanner(
+                              errorMessage: signupFormState.errorMessage!,
+                            ),
 
                           // Email TextField
                           CustomTextField.email(
