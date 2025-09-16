@@ -1,3 +1,4 @@
+import 'package:logger/web.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepository {
@@ -6,7 +7,7 @@ class AuthRepository {
   AuthRepository(this.client);
 
   // Sign up
-  Future<AuthResponse> signUp(
+  Future<AuthResponse> signUpWithEmail(
     String email,
     String username,
     String password,
@@ -15,17 +16,13 @@ class AuthRepository {
       final response = await client.auth.signUp(
         email: email,
         password: password,
+        emailRedirectTo: 'myapp://callback',
         data: {'username': username},
       );
 
       final user = response.user;
 
       if (user == null) throw AuthException('Sign up failed: No user returned');
-
-      // Check if profile row is inserted successfully
-      final profiles = await client.from('profiles').select().eq('id', user.id);
-
-      print(profiles); // This will be a list
 
       return response;
     } on AuthException {
@@ -34,6 +31,48 @@ class AuthRepository {
       throw Exception('Failed to create profile: ${e.message}');
     } catch (e) {
       throw Exception('Unexpected error during sign up: $e');
+    }
+  }
+
+  // Signups with Phone Number
+  Future<void> signupWithPhone(
+    String phone,
+    String username,
+    String password,
+  ) async {
+    try {
+      await client.auth.signUp(
+        phone: phone,
+        password: password,
+        emailRedirectTo: 'myapp://callback',
+        data: {'username': username},
+      );
+
+      // At this point the OTP was sent automatically
+    } on AuthException {
+      rethrow;
+    } on PostgrestException catch (e) {
+      Logger().e(e.message);
+      throw Exception('failed to create profile: ${e.message}');
+    } catch (e) {
+      Logger().e(e);
+      throw Exception('Unexpected error during signup: $e');
+    }
+  }
+
+  // Verifies the OTP
+  Future<void> verifyOtp(String email, String token) async {
+    try {
+      await client.auth.verifyOTP(
+        type: OtpType.email,
+        token: token,
+        phone: email,
+      );
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      Logger().e(e);
+      throw Exception('Invalid or expired OTP: $e');
     }
   }
 
@@ -110,6 +149,8 @@ class AuthRepository {
   Session? getCurrentSession() {
     return client.auth.currentSession;
   }
+
+
 
   // Get current user's profile
   Future<Map<String, dynamic>?> getCurrentUserProfile() async {

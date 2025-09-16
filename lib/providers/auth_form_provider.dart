@@ -1,3 +1,4 @@
+import 'package:logger/web.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:todo_list_supabase/exceptions/auth_exceptions.dart';
 import 'package:todo_list_supabase/models/auth_form_state.dart';
@@ -19,6 +20,14 @@ class AuthForm extends _$AuthForm {
 
   void updateUsername(String username) {
     state = state.copyWith(username: username, errorMessage: null);
+  }
+
+  void updatePhone(String phone) {
+    state = state.copyWith(phone: phone, errorMessage: null);
+  }
+
+  void updateOTP(String otp) {
+    state = state.copyWith(otp: otp, errorMessage: null);
   }
 
   void updatePassword(String password) {
@@ -64,12 +73,9 @@ class AuthForm extends _$AuthForm {
       if (authState.hasValue && authState.value != null) {
         state = state.copyWith(
           isLoading: false,
-          successMessage: 'Login successful!',
+          successMessage: 'Signup successful!',
         );
       }
-
-      // Resets the form state
-      reset();
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = state.copyWith(
@@ -79,7 +85,7 @@ class AuthForm extends _$AuthForm {
     }
   }
 
-  Future<void> submitSignup() async {
+  Future<void> submitEmailSignup() async {
     if (!_validateSignup()) return;
 
     state = state.copyWith(isLoading: true, errorMessage: null);
@@ -87,7 +93,7 @@ class AuthForm extends _$AuthForm {
     try {
       await ref
           .read(authNotifierProvider.notifier)
-          .signup(state.email, state.username, state.password);
+          .signupWithEmail(state.email, state.username, state.password);
 
       // Check if signup was successful
       final authState = ref.read(authNotifierProvider);
@@ -97,14 +103,50 @@ class AuthForm extends _$AuthForm {
           successMessage: 'Signup successful!',
         );
       }
-
-      reset();
-    } catch (error) {
+      
+    } catch (error) { 
       final friendlyError = AuthErrorMapper.mapError(error);
       state = state.copyWith(
         isLoading: false,
         errorMessage: friendlyError.message,
       );
+    }
+  }
+
+  Future<void> submitPhoneSignup() async {
+    if (!_validateSignup()) return;
+
+    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    try {
+      await ref
+          .read(authNotifierProvider.notifier)
+          .signUpWithPhone(state.phone, state.username, state.password);
+    } catch (error) {
+      Logger().e(error);
+      final friendlyError = AuthErrorMapper.mapError(error);
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: friendlyError.message,
+      );
+    }
+  }
+
+  Future<void> submitOtp() async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    try {
+      await ref
+          .read(authNotifierProvider.notifier)
+          .verifyOtp(state.phone, state.otp);
+      state = state.copyWith(
+        isLoading: false,
+        successMessage: 'Phone verification successful!',
+      );
+
+      reset();
+    } catch (error) {
+      state = state.copyWith(isLoading: false, errorMessage: error.toString());
     }
   }
 
@@ -156,6 +198,7 @@ class AuthForm extends _$AuthForm {
     state = state.copyWith(
       emailError: null,
       usernameError: null,
+      phoneError: null,
       passwordError: null,
       confirmPasswordError: null,
     );

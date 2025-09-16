@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logger/web.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/providers/auth_form_provider.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
-import 'package:todo_list_supabase/screens/home.dart';
-import 'package:todo_list_supabase/screens/signup.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/auth_screen_header.dart';
 import 'package:todo_list_supabase/widgets/auth_loading_overlay.dart';
@@ -36,20 +35,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Logger().d(state.event);
 
           if (state.event == AuthChangeEvent.signedIn) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => HomeScreen()),
-            );
+            Logger().d('signed in');
+            context.go('/home');
           }
         },
         error: (e, st) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(e.toString())));
+
+          // Resets form state
+          loginFormNotifier.reset();
         },
         loading: () {},
       );
-
     });
 
     return Scaffold(
@@ -119,12 +118,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             onPressed: loginFormState.isLoading
                                 ? () {}
                                 : () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SignupScreen(),
-                                      ),
-                                    );
+                                    context.go('/signup');
                                   },
                           ),
                         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:logger/web.dart';
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/providers/task_provider.dart';
@@ -21,21 +21,30 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final _log = Logger();
-
   void _handleTaskSubmission(String taskTitle) {}
+  @override
+  void initState() {
+    super.initState();
+    Fluttertoast.showToast(
+      msg: 'Login successfull',
+      gravity: ToastGravity.BOTTOM_RIGHT,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final tasks = ref.watch(taskNotifierProvider);
-    // final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authNotifierProvider);
 
-    // _log.d('Auth State in HomeScreen: $authState');
+    Logger().d('Auth State in HomeScreen: $authState');
     ref.listen(authNotifierProvider, (previous, next) {
       next.when(
         data: (state) {
-          if(state.event != AuthChangeEvent.signedIn) {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen()));
+          if (state.event != AuthChangeEvent.signedIn) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => LoginScreen()),
+            );
           }
         },
         error: (_, _) => {},
@@ -43,7 +52,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     });
 
-    // TODO: REFINE THE AUTH STATE LISTENER TO AVOID UNNECESSARY NAVIGATION
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade700,

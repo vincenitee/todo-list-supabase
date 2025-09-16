@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:todo_list_supabase/providers/auth_form_provider.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
-import 'package:todo_list_supabase/screens/home.dart';
-import 'package:todo_list_supabase/screens/login.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/auth_loading_overlay.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';
@@ -26,17 +25,21 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
     // Creates an INDEPENDENT instance for signup
     final signupFormState = ref.watch(authFormProvider('signup'));
     final signupFormNotifier = ref.read(authFormProvider('signup').notifier);
+    final authState = ref.watch(authNotifierProvider);
 
-    ref.listen(authNotifierProvider, (previous, next) {
-      next.whenData((state) {
-        if (state.event == AuthChangeEvent.signedIn) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => HomeScreen()),
-          );
-        }
-      });
-    });
+    Logger().d("Form State (SignUp): $signupFormState");
+    Logger().d('Auth State (SignUp): $authState');
+
+    // ref.listen(authNotifierProvider, (previous, next) {
+    //   next.whenData((state) {
+    //     if (state.event == AuthChangeEvent.signedIn) {
+    //       Navigator.push(
+    //         context,
+    //         MaterialPageRoute(builder: (_) => HomeScreen()),
+    //       );
+    //     }
+    //   });
+    // });
 
     return Scaffold(
       body: Stack(
@@ -84,6 +87,14 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                             errorText: signupFormState.usernameError,
                           ),
 
+                          // const SizedBox(height: 20),
+
+                          // // Phone TextField
+                          // CustomTextField.phone(
+                          //   onChanged: signupFormNotifier.updatePhone,
+                          //   errorText: signupFormState.phoneError,
+                          // ),
+
                           const SizedBox(height: 20),
 
                           // Password TextField
@@ -112,19 +123,14 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                                 : Icons.person_add,
                             onPressed: signupFormState.isLoading
                                 ? () {}
-                                : signupFormNotifier.submitSignup,
+                                : signupFormNotifier.submitEmailSignup,
                           ),
 
                           AuthNavigationRow(
                             text: 'Already have an account?',
                             linkText: 'Sign in',
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginScreen(),
-                                ),
-                              );
+                              context.go('/');
                             },
                           ),
                         ],
@@ -135,7 +141,6 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
               ),
             ),
           ),
-
           if (signupFormState.isLoading)
             AuthLoadingOverlay(message: 'Creating your account...'),
         ],

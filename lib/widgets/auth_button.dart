@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {
   final String label;
-  final IconData icon;
+  final IconData? icon;
   final VoidCallback onPressed;
   final Color? backgroundColor;
   final Color? foregroundColor;
@@ -12,7 +12,7 @@ class AuthButton extends StatelessWidget {
   const AuthButton({
     super.key,
     required this.label,
-    required this.icon,
+    this.icon,
     required this.onPressed,
     this.backgroundColor,
     this.foregroundColor,

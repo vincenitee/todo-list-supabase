@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
-import 'package:todo_list_supabase/screens/login.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 
@@ -14,10 +13,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _profileFormKey = GlobalKey<FormState>();
-
-  String _username = '';
-  String _email = '';
-  String _password = '';
 
   void handleSignOut() async {}
 
@@ -49,19 +44,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 16),
 
                   CustomTextField.username(
-                    onSaved: (value) => _username = value ?? '',
                   ),
 
                   const SizedBox(height: 16),
 
                   CustomTextField.email(
-                    onSaved: (value) => _email = value ?? '',
                   ),
 
                   const SizedBox(height: 16),
 
                   CustomTextField.password(
-                    onSaved: (value) => _password = value ?? '',
                   ),
 
                   const SizedBox(height: 16),

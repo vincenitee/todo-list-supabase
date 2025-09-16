@@ -1,3 +1,4 @@
+import 'package:logger/web.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthException implements Exception {
@@ -69,7 +70,7 @@ class UserAlreadyRegisteredException extends AuthException {
 
 class AuthErrorMapper {
   static AuthException mapError(dynamic error) {
-    print(error.message.toString());
+    Logger().e(error.message.toString());
     // Already user-friendly
     if (error is AuthException) {
       return error;

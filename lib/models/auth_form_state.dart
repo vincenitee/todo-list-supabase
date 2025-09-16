@@ -7,6 +7,8 @@ abstract class AuthFormState with _$AuthFormState {
   const factory AuthFormState({
     @Default('') String email,
     @Default('') String username,
+    @Default('') String phone,
+    @Default('') String otp,
     @Default('') String password,
     @Default('') String confirmPassword,
     @Default(false) bool isLoading,
@@ -18,6 +20,8 @@ abstract class AuthFormState with _$AuthFormState {
     String? passwordError,
     String? confirmPasswordError,
     String? usernameError,
+    String? phoneError,
+    String? otpError,
   }) = _AuthFormState;
 }
 

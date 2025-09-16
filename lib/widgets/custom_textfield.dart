@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String label;
+  final String? hintText;
   final String? errorText;
   final bool obscureText;
   final Widget? prefixIcon;
@@ -18,6 +19,7 @@ class CustomTextField extends StatefulWidget {
     super.key,
     this.controller,
     this.label = '',
+    this.hintText,
     this.errorText,
     this.obscureText = false,
     this.prefixIcon,
@@ -123,6 +125,53 @@ class CustomTextField extends StatefulWidget {
     );
   }
 
+  // OTP
+  factory CustomTextField.otp({
+    Key? key,
+    TextEditingController? controller,
+    String label = 'OTP',
+    String? errorText,
+    String? Function(String?)? validator,
+    void Function(String?)? onSaved,
+    void Function(String)? onChanged,
+    bool enabled = true,
+  }){
+    return CustomTextField(
+      key: key,
+      controller: controller,
+      label: label,
+      errorText: errorText,
+      validator: validator,
+      onSaved: onSaved,
+      onChanged: onChanged,
+      enabled: enabled,
+    );
+  }
+  
+  factory CustomTextField.phone({
+    Key? key,
+    TextEditingController? controller,
+    String label = 'Phone',
+    String hintText = '+63xxxxxxxxxx',
+    String? errorText,
+    String? Function(String?)? validator,
+    void Function(String?)? onSaved,
+    void Function(String)? onChanged,
+    bool enabled = true,
+  }){
+    return CustomTextField(
+      key: key,
+      controller: controller,
+      label: label,
+      hintText: hintText,
+      errorText: errorText,
+      validator: validator ?? _defaultPhoneValidator,
+      onSaved: onSaved,
+      onChanged: onChanged,
+      enabled: enabled,
+    );
+  }
+
   static String? _defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -146,6 +195,16 @@ class CustomTextField extends StatefulWidget {
     }
     if(value.length < 5) {
       return 'Username should be atleast 5 characters';
+    }
+    return null;
+  }
+
+  static String? _defaultPhoneValidator(String? value) {
+    if(value == null || value.isEmpty) {
+      return 'Phone number is required.';
+    }
+    if(!RegExp(r'^\+?[0-9]{7,15}$').hasMatch(value)) {
+      return 'Please enter a valid phone number.';
     }
     return null;
   }
@@ -184,6 +243,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       controller: widget.controller,
       obscureText: _obscureText,
       decoration: InputDecoration(
+        hintText: widget.hintText,
         label: Text(widget.label),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         prefixIcon: widget.prefixIcon,

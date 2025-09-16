@@ -1,3 +1,4 @@
+import 'package:logger/web.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/providers/auth_repository_provider.dart';
@@ -40,13 +41,37 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   // Sign Up - now called by AuthForm
-  Future<void> signup(String email, String username, String password) async {
+  Future<void> signupWithEmail(String email, String username, String password) async {
     try {
-      await _repository.signUp(email, username, password);
+      await _repository.signUpWithEmail(email, username, password);
     } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
       rethrow; // Re-throw so AuthForm can handle the error in its own state
+    }
+  }
+
+  Future<void> signUpWithPhone(String phone, String username, String password) async{
+    try {
+      await _repository.signupWithPhone(phone, username, password);
+    } catch (error) {
+      Logger().e(error);
+      final friendlyError = AuthErrorMapper.mapError(error);
+      state = AsyncValue.error(friendlyError, StackTrace.current);
+      rethrow;
+    }
+  }
+
+  
+
+  Future<void> verifyOtp(String email, String token) async {
+    try {
+      await _repository.verifyOtp(email, token);
+    } catch (error) {
+      Logger().e(error);
+      final friendlyError = AuthErrorMapper.mapError(error);
+      state = AsyncValue.error(friendlyError, StackTrace.current);
+      rethrow;
     }
   }
 

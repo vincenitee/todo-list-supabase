@@ -51,7 +51,7 @@ class TaskRepository {
 
       return newTask;
     } catch (e, st) {
-      print('Failed to add task: $e/n$st');
+      Logger().e('Failed to add task: $e/n$st');
       rethrow;
     }
   }
@@ -73,7 +73,7 @@ class TaskRepository {
       return Task.fromJson(response);
 
     } catch (e, st) {
-      print('Failed to toggle task status: $e/n$st');
+      Logger().e('Failed to toggle task status: $e/n$st');
       rethrow;
     }
   }
