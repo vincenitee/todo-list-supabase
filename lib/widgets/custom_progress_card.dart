@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_supabase/models/task.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_list_supabase/providers/task_provider.dart';
 import 'package:todo_list_supabase/widgets/progress_header.dart';
 import 'package:todo_list_supabase/widgets/progress_indicator.dart';
 
-class ProgressCard extends StatelessWidget {
-  final List<Task> tasks;
-
-  const ProgressCard({super.key, required this.tasks});
+class ProgressCard extends ConsumerWidget {
+  const ProgressCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final taskState = ref.watch(taskNotifierProvider);
+    final tasks = taskState.value ?? [];
+
     final int completedTasks = tasks.where((task) => task.isDone).length;
     final int totalTasks = tasks.length;
     final int percentage =

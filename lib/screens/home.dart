@@ -7,7 +7,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/models/task.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/providers/task_provider.dart';
-import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/task_list.dart';
@@ -20,26 +19,17 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-// TODO: REFACTOR THIS SHIT LATER
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _taskTitleController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
     Fluttertoast.showToast(
       msg: 'Login successfull',
       gravity: ToastGravity.BOTTOM_RIGHT,
     );
-
-    ref.listen(authNotifierProvider, (previous, next) {
-      next.whenData((state) {
-        if (state.event != AuthChangeEvent.signedIn) {
-          // Navigates to login screen
-          context.go('/');
-        }
-      });
-    });
   }
 
   @override
@@ -53,6 +43,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final taskState = ref.watch(taskNotifierProvider);
     final taskNotifier = ref.read(taskNotifierProvider.notifier);
     final authState = ref.watch(authNotifierProvider);
+
+    ref.listen(authNotifierProvider, (previous, next) {
+      next.whenData((state) {
+        if (state.event != AuthChangeEvent.signedIn) {
+          // Navigates to login screen
+          context.go('/');
+        }
+      });
+    });
 
     Logger().d('Tasks in HomeScreen: $taskState');
     Logger().d(
@@ -84,64 +83,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
       ),
 
-      body: taskState.when(
-        data: (tasks) {
-          return Column(
-            children: [
-              const SizedBox(height: 20),
-              // Progress Section
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: ProgressCard(tasks: tasks ?? []),
-              ),
-
-              // Task List Header
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: TaskListHeader(tasksCount: tasks?.length ?? 0),
-              ),
-
-              // List of Tasks
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  child: TaskList(
-                    tasks: tasks ?? [],
-                    onTaskTap: (task) {
-                      taskNotifier.toggleTask(task);
-                      Fluttertoast.showToast(
-                        msg: task.isDone
-                            ? 'Marked as pending'
-                            : 'Marked as completed',
-                        gravity: ToastGravity.BOTTOM_RIGHT,
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-        error: (e, _) {
-          return Center(child: Text('Error loading tasks: $e'));
-        },
-        loading: () {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(),
-                Text('Fetching tasks...'),
-              ],
+      body: Column(
+        children: [
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
             ),
-          );
-        },
+            child: ProgressCard(),
+          ),
+
+          // Task List Header
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            child: TaskListHeader(),
+          ),
+
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: TaskList(),
+            ),
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -202,12 +170,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                             // Adds the task
                             taskNotifier.addTask(
-                                  Task(
-                                    userId: userId,
-                                    title: value.trim(),
-                                    isDone: false,
-                                  ),
-                                );
+                              Task(
+                                userId: userId,
+                                title: value.trim(),
+                                isDone: false,
+                              ),
+                            );
 
                             Fluttertoast.showToast(
                               msg: 'Task added successfully',

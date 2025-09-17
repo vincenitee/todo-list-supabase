@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_list_supabase/providers/task_provider.dart';
 
-class TaskListHeader extends StatelessWidget {
-  final int tasksCount;
-
-  const TaskListHeader({super.key, required this.tasksCount});
+class TaskListHeader extends ConsumerWidget {
+  const TaskListHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tasksCount = ref.watch(taskNotifierProvider).value?.length ?? 0;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
