@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
@@ -18,6 +21,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(authNotifierProvider, (previous, next) {
+      next.whenData((state) {
+        if (state.event != AuthChangeEvent.signedIn) {
+          // Navigates to login screen
+          context.go('/');
+        }
+      });
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -43,18 +54,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 children: [
                   const SizedBox(height: 16),
 
-                  CustomTextField.username(
-                  ),
+                  CustomTextField.username(),
 
                   const SizedBox(height: 16),
 
-                  CustomTextField.email(
-                  ),
+                  CustomTextField.email(),
 
                   const SizedBox(height: 16),
 
-                  CustomTextField.password(
-                  ),
+                  CustomTextField.password(),
 
                   const SizedBox(height: 16),
 
@@ -72,8 +80,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     label: 'Sign out',
                     icon: Icons.logout,
                     backgroundColor: Colors.red,
-                    onPressed: () {
-                      ref.read(authNotifierProvider.notifier).signOut();
+                    onPressed: () async {
+                      try {
+                        await ref.read(authNotifierProvider.notifier).signOut();
+                      } catch (e) {
+                        Logger().e('Error signing out: $e');
+                      }
                     },
                   ),
                 ],

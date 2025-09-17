@@ -4,7 +4,6 @@ import 'package:todo_list_supabase/models/task.dart';
 
 class TaskRepository {
 
-  final _log = Logger();
   final SupabaseClient client;
 
   TaskRepository(this.client);
@@ -17,7 +16,7 @@ class TaskRepository {
 
   // Fetches tasks based on the userId
   Future<List<Task>> getTasksByUserId(String userId) async {
-    _log.d('Authenticated User ID: $userId');
+    Logger().d('Authenticated User ID: $userId');
 
     try {
       // Fetches tasks

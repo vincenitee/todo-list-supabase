@@ -27,6 +27,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final loginFormState = ref.watch(authFormProvider('login'));
     final loginFormNotifier = ref.read(authFormProvider('login').notifier);
 
+    Logger().d('Login Form State: $loginFormState');
+
     // Listen to the actual authentication state for navigation
     ref.listen(authNotifierProvider, (previous, next) {
       // If authenticated move to Home Screen
@@ -37,6 +39,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           if (state.event == AuthChangeEvent.signedIn) {
             Logger().d('signed in');
             context.go('/home');
+
+            // Reset form state
+            loginFormNotifier.reset();
           }
         },
         error: (e, st) {
@@ -44,8 +49,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             context,
           ).showSnackBar(SnackBar(content: Text(e.toString())));
 
-          // Resets form state
-          loginFormNotifier.reset();
         },
         loading: () {},
       );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
+  final TextInputAction textInputAction;
   final String label;
   final String? hintText;
   final String? errorText;
@@ -12,12 +13,14 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
   final bool isPassword;
   final bool enabled;
 
   const CustomTextField({
     super.key,
     this.controller,
+    this.textInputAction = TextInputAction.next,
     this.label = '',
     this.hintText,
     this.errorText,
@@ -28,6 +31,7 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.onSaved,
     this.onChanged,
+    this.onSubmitted,
     this.isPassword = false,
     this.enabled = true, // Default to false
   });
@@ -241,6 +245,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return TextFormField(
       enabled: widget.enabled,
       controller: widget.controller,
+      textInputAction: widget.textInputAction,
       obscureText: _obscureText,
       decoration: InputDecoration(
         hintText: widget.hintText,
@@ -267,6 +272,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       validator: widget.validator ?? widget._defaultTextFieldValidator,
       onSaved: widget.onSaved,
       onChanged: widget.onChanged,
+      onFieldSubmitted: widget.onSubmitted,
     );
   }
 }

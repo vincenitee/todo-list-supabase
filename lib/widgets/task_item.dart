@@ -36,7 +36,7 @@ class TaskItem extends StatelessWidget {
         leading: Icon(icon, color: iconColor),
         title: Text(task.title),
         trailing: Text(
-          AppDateUtils.formatTime(task.createdAt),
+          AppDateUtils.formatTime(task.createdAt?.toLocal() ?? DateTime.now()),
           style: TextStyle(fontSize: 12, color: Colors.grey),
         ),
         tileColor: tileColor,

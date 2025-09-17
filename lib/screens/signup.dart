@@ -30,17 +30,6 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
     Logger().d("Form State (SignUp): $signupFormState");
     Logger().d('Auth State (SignUp): $authState');
 
-    // ref.listen(authNotifierProvider, (previous, next) {
-    //   next.whenData((state) {
-    //     if (state.event == AuthChangeEvent.signedIn) {
-    //       Navigator.push(
-    //         context,
-    //         MaterialPageRoute(builder: (_) => HomeScreen()),
-    //       );
-    //     }
-    //   });
-    // });
-
     return Scaffold(
       body: Stack(
         children: [

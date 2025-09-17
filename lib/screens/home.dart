@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:todo_list_supabase/models/task.dart';
 import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/providers/task_provider.dart';
-import 'package:todo_list_supabase/screens/login.dart';
-import 'package:todo_list_supabase/screens/profile.dart';
+import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/custom_progress_card.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
-import 'package:todo_list_supabase/widgets/task_dialog.dart';
 import 'package:todo_list_supabase/widgets/task_list.dart';
 import 'package:todo_list_supabase/widgets/task_list_header.dart';
 
@@ -20,8 +20,10 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
+// TODO: REFACTOR THIS SHIT LATER
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  void _handleTaskSubmission(String taskTitle) {}
+  final _taskTitleController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -29,30 +31,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       msg: 'Login successfull',
       gravity: ToastGravity.BOTTOM_RIGHT,
     );
+
+    ref.listen(authNotifierProvider, (previous, next) {
+      next.whenData((state) {
+        if (state.event != AuthChangeEvent.signedIn) {
+          // Navigates to login screen
+          context.go('/');
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _taskTitleController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final tasks = ref.watch(taskNotifierProvider);
+    final taskState = ref.watch(taskNotifierProvider);
+    final taskNotifier = ref.read(taskNotifierProvider.notifier);
     final authState = ref.watch(authNotifierProvider);
 
-    Logger().d('Auth State in HomeScreen: $authState');
-    ref.listen(authNotifierProvider, (previous, next) {
-      next.when(
-        data: (state) {
-          if (state.event != AuthChangeEvent.signedIn) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => LoginScreen()),
-            );
-          }
-        },
-        error: (_, _) => {},
-        loading: () {},
-      );
-    });
+    Logger().d('Tasks in HomeScreen: $taskState');
+    Logger().d(
+      'Auth State in HomeScreen: ${authState.value?.session?.user.id}',
+    );
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.blue.shade700,
         automaticallyImplyLeading: false,
@@ -69,69 +77,154 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => ProfileScreen()),
-              );
+              context.go('/profiles');
             },
             icon: Icon(Icons.person, color: Colors.white, size: 20),
           ),
         ],
       ),
 
-      body: Column(
-        children: [
-          // Search Field
-          Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              child: CustomTextField(label: 'Search task'),
-            ),
-          ),
-
-          // Progress Section
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white, // Solid background moved to decoration
-            ),
-            child: ProgressCard(tasks: tasks.value ?? []),
-          ),
-
-          // Task List Header (Optional)
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TaskListHeader(tasksCount: 0),
-          ),
-
-          // List of Tasks
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              child: TaskList(
-                tasks: tasks.value ?? [],
-                onTaskTap: (task) {
-                  setState(() {
-                    // TODO: IMPLEMENT THE TOGGLING OF TASK STATUS
-                    // task.isDone = !task.isDone;
-                  });
-                },
+      body: taskState.when(
+        data: (tasks) {
+          return Column(
+            children: [
+              const SizedBox(height: 20),
+              // Progress Section
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: ProgressCard(tasks: tasks ?? []),
               ),
+
+              // Task List Header
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: TaskListHeader(tasksCount: tasks?.length ?? 0),
+              ),
+
+              // List of Tasks
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: TaskList(
+                    tasks: tasks ?? [],
+                    onTaskTap: (task) {
+                      taskNotifier.toggleTask(task);
+                      Fluttertoast.showToast(
+                        msg: task.isDone
+                            ? 'Marked as pending'
+                            : 'Marked as completed',
+                        gravity: ToastGravity.BOTTOM_RIGHT,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+        error: (e, _) {
+          return Center(child: Text('Error loading tasks: $e'));
+        },
+        loading: () {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                Text('Fetching tasks...'),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
+          showModalBottomSheet(
             context: context,
-            builder: (_) => TaskDialog(
-              // TODO: Implement the actual saving of data to the database
-              onSubmit: _handleTaskSubmission,
-            ),
+            isScrollControlled: true,
+            builder: (BuildContext context) {
+              return AnimatedPadding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(
+                    context,
+                  ).viewInsets.bottom, // ✅ Keyboard height
+                ),
+                duration: const Duration(milliseconds: 100),
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Add New Task',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        CustomTextField(
+                          label: 'Title',
+                          hintText: 'I want to...',
+                          controller: _taskTitleController,
+                          enabled: taskState.isLoading ? false : true,
+                          onSubmitted: (value) {
+                            if (value.trim().isEmpty) {
+                              Fluttertoast.showToast(
+                                msg: 'Task title cannot be empty',
+                                gravity: ToastGravity.BOTTOM_RIGHT,
+                              );
+                              return;
+                            }
+
+                            // Checks if there was an authenticated user
+                            final user = authState.value?.session?.user;
+
+                            if (user == null) {
+                              Fluttertoast.showToast(
+                                msg: 'No authenticated user found',
+                                gravity: ToastGravity.BOTTOM_RIGHT,
+                              );
+                              return;
+                            }
+
+                            final userId = user.id;
+
+                            // Adds the task
+                            taskNotifier.addTask(
+                                  Task(
+                                    userId: userId,
+                                    title: value.trim(),
+                                    isDone: false,
+                                  ),
+                                );
+
+                            Fluttertoast.showToast(
+                              msg: 'Task added successfully',
+                              gravity: ToastGravity.BOTTOM_RIGHT,
+                            );
+
+                            // Clears the text field
+                            _taskTitleController.clear();
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
           );
         },
 

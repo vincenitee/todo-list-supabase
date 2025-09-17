@@ -7,11 +7,11 @@ part 'task.g.dart';
 abstract class Task with _$Task {
   @JsonSerializable(explicitToJson: true)
   const factory Task({
-    int? id,
+    @JsonKey(includeIfNull: false) final int? id,
     @JsonKey(name: 'user_id') required String userId,
     required String title,
     @JsonKey(name: 'done') required bool isDone,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'created_at', includeIfNull: false) DateTime? createdAt,
   }) = _Task;
 
   // Convert from JSON to Task
