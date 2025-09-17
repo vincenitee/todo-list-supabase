@@ -35,7 +35,9 @@ class TaskNotifier extends _$TaskNotifier {
       Logger().d('New Task added: $newTask');
 
       if (newTask != null) {
-        state = AsyncValue.data(_sortTaskByStatusAndDate([...previousTasks, newTask]));
+        state = AsyncValue.data(
+          _sortTaskByStatusAndDate([...previousTasks, newTask]),
+        );
       } else {
         state = AsyncValue.data(previousTasks);
       }
@@ -81,7 +83,30 @@ class TaskNotifier extends _$TaskNotifier {
   }
 
   // Delete Task
-  // TODO: IMPLEMENT THE deleteTask METHOD
+  Future<void> deleteTask(Task task) async {
+    state = AsyncValue.loading();
+    // Keep the previous list of tasks
+    final previousTasks = state.value ?? [];
+
+    if (task.id == null) {
+      throw Exception('Task ID is null');
+    }
+
+    try {
+      // Delete task
+      await _taskRepository.deleteTask(task.id!);
+
+      // Remove the task from the previous list
+      final updatedTask = previousTasks.where((t) => t.id != task.id).toList();
+
+      // Update state
+      state = AsyncValue.data(_sortTaskByStatusAndDate(updatedTask));
+    } catch (e, st) {
+      Logger().e('Failed to delete task: $e');
+      Logger().t(st);
+      state = AsyncValue.data(state.value ?? []);
+    }
+  }
 
   List<Task> _sortTaskByStatusAndDate(List<Task> tasks) {
     tasks.sort((a, b) {

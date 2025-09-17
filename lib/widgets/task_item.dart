@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_list_supabase/models/task.dart';
+import 'package:todo_list_supabase/providers/task_provider.dart';
 import 'package:todo_list_supabase/utils/app_date_utils.dart';
 
-class TaskItem extends StatelessWidget {
+class TaskItem extends ConsumerWidget {
   final Task task;
   final double verticalMargin;
   final void Function(Task) onTap;
+
   const TaskItem({
     super.key,
     required this.task,
@@ -14,7 +17,7 @@ class TaskItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final IconData icon = task.isDone
         ? Icons.check_circle
         : Icons.radio_button_unchecked;
@@ -27,6 +30,24 @@ class TaskItem extends StatelessWidget {
 
     final String subtitle = task.isDone ? 'Completed' : 'Pending';
 
+    final Widget trailing = task.isDone
+        ? IconButton(
+            onPressed: () {
+              ref.read(taskNotifierProvider.notifier).deleteTask(task);
+              // Optionally, show a snackbar or confirmation
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Task "${task.title}" deleted')),
+              );
+            },
+            icon: Icon(Icons.remove_circle_outline),
+          )
+        : Text(
+            AppDateUtils.formatTime(
+              task.createdAt?.toLocal() ?? DateTime.now(),
+            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey),
+          );
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: verticalMargin),
       child: ListTile(
@@ -35,10 +56,7 @@ class TaskItem extends StatelessWidget {
         ),
         leading: Icon(icon, color: iconColor),
         title: Text(task.title),
-        trailing: Text(
-          AppDateUtils.formatTime(task.createdAt?.toLocal() ?? DateTime.now()),
-          style: TextStyle(fontSize: 12, color: Colors.grey),
-        ),
+        trailing: trailing,
         tileColor: tileColor,
         subtitle: Text(subtitle),
         onTap: () => onTap(task),
