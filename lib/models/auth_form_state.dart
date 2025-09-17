@@ -14,6 +14,7 @@ abstract class AuthFormState with _$AuthFormState {
     @Default(false) bool isLoading,
     @Default(false) bool obscurePassword,
     @Default(false) bool obscureConfirmPassword,
+    @Default(false) bool navigateToVerification,
     String? successMessage,
     String? errorMessage,
     String? emailError,

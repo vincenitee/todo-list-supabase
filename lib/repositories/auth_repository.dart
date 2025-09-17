@@ -21,8 +21,12 @@ class AuthRepository {
       );
 
       final user = response.user;
+      final session = response.session;
 
-      if (user == null) throw AuthException('Sign up failed: No user returned');
+      if (user != null && session == null) {
+        // waiting for verification
+        Logger().d('User created, email verification pending: ${user.email}');
+      }
 
       return response;
     } on AuthException {
@@ -120,7 +124,8 @@ class AuthRepository {
       );
 
       final user = response.user;
-      if (user == null) throw AuthException('Failed to update user authentication');
+      if (user == null)
+        throw AuthException('Failed to update user authentication');
 
       // Update profile information
       await client
@@ -149,8 +154,6 @@ class AuthRepository {
   Session? getCurrentSession() {
     return client.auth.currentSession;
   }
-
-
 
   // Get current user's profile
   Future<Map<String, dynamic>?> getCurrentUserProfile() async {

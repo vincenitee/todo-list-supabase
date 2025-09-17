@@ -55,7 +55,7 @@ class TaskItem extends ConsumerWidget {
           borderRadius: BorderRadiusGeometry.circular(5),
         ),
         leading: Icon(icon, color: iconColor),
-        title: Text(task.title),
+        title: Text(task.title, overflow: TextOverflow.ellipsis),
         trailing: trailing,
         tileColor: tileColor,
         subtitle: Text(subtitle),

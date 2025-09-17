@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/web.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -35,20 +36,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       next.when(
         data: (state) {
           Logger().d(state.event);
-
           if (state.event == AuthChangeEvent.signedIn) {
             Logger().d('signed in');
             context.go('/home');
-
             // Reset form state
             loginFormNotifier.reset();
-          }
+          } 
         },
         error: (e, st) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(e.toString())));
-
         },
         loading: () {},
       );

@@ -35,9 +35,7 @@ class TaskNotifier extends _$TaskNotifier {
       Logger().d('New Task added: $newTask');
 
       if (newTask != null) {
-        state = AsyncValue.data(
-          _sortTaskByStatusAndDate([...previousTasks, newTask]),
-        );
+        state = AsyncValue.data(_sortTaskByStatusAndDate([...previousTasks, newTask]));
       } else {
         state = AsyncValue.data(previousTasks);
       }
@@ -83,12 +81,11 @@ class TaskNotifier extends _$TaskNotifier {
   }
 
   // Delete Task
-  Future<void> deleteTask(Task task) async {
-    state = AsyncValue.loading();
+  Future<void> deleteTask (Task task) async {
     // Keep the previous list of tasks
     final previousTasks = state.value ?? [];
 
-    if (task.id == null) {
+    if(task.id == null) {
       throw Exception('Task ID is null');
     }
 
@@ -96,12 +93,11 @@ class TaskNotifier extends _$TaskNotifier {
       // Delete task
       await _taskRepository.deleteTask(task.id!);
 
-      // Remove the task from the previous list
-      final updatedTask = previousTasks.where((t) => t.id != task.id).toList();
-
       // Update state
+      final updatedTask = previousTasks.where((t) => t.id != task.id).toList();
       state = AsyncValue.data(_sortTaskByStatusAndDate(updatedTask));
-    } catch (e, st) {
+
+    } catch(e, st) {
       Logger().e('Failed to delete task: $e');
       Logger().t(st);
       state = AsyncValue.data(state.value ?? []);

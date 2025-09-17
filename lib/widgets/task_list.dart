@@ -16,29 +16,32 @@ class TaskList extends ConsumerWidget {
 
     return taskState.when(
       data: (tasks) {
-        return (tasks == null)
-            ? NoTaskYet()
-            : ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  final task = tasks[index];
-                  return TaskItem(task: task, onTap: (task) {
-                    taskNotifier.toggleTask(task);
-                    Fluttertoast.showToast(
-                      msg: task.isDone
-                          ? 'Task marked as pending'
-                          : 'Task marked as completed',
-                      gravity: ToastGravity.BOTTOM_RIGHT,
-                    );
-                  });
-                },
-              );
+        if (tasks == null || tasks.isEmpty) {
+          return const NoTaskYet();
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          itemCount: tasks.length,
+          itemBuilder: (context, index) {
+            final task = tasks[index];
+            return TaskItem(
+              task: task,
+              onTap: (task) {
+                taskNotifier.toggleTask(task);
+                Fluttertoast.showToast(
+                  msg: task.isDone
+                      ? 'Task marked as pending'
+                      : 'Task marked as completed',
+                  gravity: ToastGravity.BOTTOM_RIGHT,
+                );
+              },
+            );
+          },
+        );
       },
       error: (_, _) {
-        return Center(
-          child: Text('Something went wrong!'),
-        );
+        return Center(child: Text('Something went wrong!'));
       },
       loading: () {
         return const Center(

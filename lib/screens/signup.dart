@@ -11,6 +11,7 @@ import 'package:todo_list_supabase/widgets/auth_screen_header.dart';
 import 'package:todo_list_supabase/widgets/custom_textfield.dart';
 import 'package:todo_list_supabase/widgets/error_banner.dart';
 import 'package:todo_list_supabase/widgets/form_container.dart';
+import 'package:todo_list_supabase/widgets/success_banner.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -25,10 +26,17 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
     // Creates an INDEPENDENT instance for signup
     final signupFormState = ref.watch(authFormProvider('signup'));
     final signupFormNotifier = ref.read(authFormProvider('signup').notifier);
-    final authState = ref.watch(authNotifierProvider);
 
-    Logger().d("Form State (SignUp): $signupFormState");
-    Logger().d('Auth State (SignUp): $authState');
+    ref.listen(authFormProvider('signup'), (prev, next) {
+      // Navigates to the verification screen
+      if (next.navigateToVerification == true &&
+          prev?.navigateToVerification != true) {
+        context.go(
+          '/email_verification',
+          extra: {'email': signupFormState.email},
+        );
+      }
+    });
 
     return Scaffold(
       body: Stack(
@@ -62,6 +70,11 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                               errorMessage: signupFormState.errorMessage!,
                             ),
 
+                          if (signupFormState.successMessage != null)
+                            SuccessBanner(
+                              successMessage: signupFormState.successMessage!,
+                            ),
+
                           // Email TextField
                           CustomTextField.email(
                             onChanged: signupFormNotifier.updateEmail,
@@ -75,14 +88,6 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                             onChanged: signupFormNotifier.updateUsername,
                             errorText: signupFormState.usernameError,
                           ),
-
-                          // const SizedBox(height: 20),
-
-                          // // Phone TextField
-                          // CustomTextField.phone(
-                          //   onChanged: signupFormNotifier.updatePhone,
-                          //   errorText: signupFormState.phoneError,
-                          // ),
 
                           const SizedBox(height: 20),
 

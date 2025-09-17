@@ -95,16 +95,26 @@ class AuthForm extends _$AuthForm {
           .read(authNotifierProvider.notifier)
           .signupWithEmail(state.email, state.username, state.password);
 
-      // Check if signup was successful
       final authState = ref.read(authNotifierProvider);
-      if (authState.hasValue && authState.value != null) {
+      final session = authState.value?.session;
+
+      Logger().d('Current session after signup: $session');
+
+      if (session == null) {
+        // No session means email verification required
+        state = state.copyWith(
+          isLoading: false,
+          successMessage: 'Signup successful! Please verify your email.',
+          navigateToVerification: true,
+        );
+      } else {
+        // Session available → user signed in immediately
         state = state.copyWith(
           isLoading: false,
           successMessage: 'Signup successful!',
         );
       }
-      
-    } catch (error) { 
+    } catch (error) {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = state.copyWith(
         isLoading: false,
