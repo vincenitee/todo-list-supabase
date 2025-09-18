@@ -1,22 +1,17 @@
-class Profile {
-  final int id;
-  final String userId;
-  final String username;
-  final DateTime createdAt;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Profile({
-    required this.id,
-    required this.userId,
-    required this.username,
-    required this.createdAt,
-  });
+part 'profile.freezed.dart';
+part 'profile.g.dart';
 
-  factory Profile.fromMap(Map<String, dynamic> map) {
-    return Profile(
-      id: map['id'] as int,
-      userId: map['user_id'] as String,
-      username: map['username'] as String,
-      createdAt: DateTime.parse(map['created_at'] as String),
-    );
-  }
+@freezed
+abstract class Profile with _$Profile {
+  const factory Profile({
+    /// Primary key, foreign key to auth.users.id
+    required String id,
+    required String username,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
+  }) = _Profile;
+
+  factory Profile.fromJson(Map<String, dynamic> json) =>
+      _$ProfileFromJson(json);
 }

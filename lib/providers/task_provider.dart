@@ -1,6 +1,8 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:todo_list_supabase/models/task.dart';
+import 'package:todo_list_supabase/models/task_stats.dart';
 import 'package:todo_list_supabase/providers/task_repository_provider.dart';
 import 'package:todo_list_supabase/repositories/task_repository.dart';
 
@@ -11,7 +13,7 @@ class TaskNotifier extends _$TaskNotifier {
   late final TaskRepository _taskRepository;
 
   @override
-  FutureOr<List<Task>?> build() async {
+  FutureOr<List<Task>> build() async {
     try {
       _taskRepository = ref.read(taskRepositoryProvider);
       final tasks = await _taskRepository.getTaskForAuthUser();
@@ -35,7 +37,9 @@ class TaskNotifier extends _$TaskNotifier {
       Logger().d('New Task added: $newTask');
 
       if (newTask != null) {
-        state = AsyncValue.data(_sortTaskByStatusAndDate([...previousTasks, newTask]));
+        state = AsyncValue.data(
+          _sortTaskByStatusAndDate([...previousTasks, newTask]),
+        );
       } else {
         state = AsyncValue.data(previousTasks);
       }
@@ -81,11 +85,11 @@ class TaskNotifier extends _$TaskNotifier {
   }
 
   // Delete Task
-  Future<void> deleteTask (Task task) async {
+  Future<void> deleteTask(Task task) async {
     // Keep the previous list of tasks
     final previousTasks = state.value ?? [];
 
-    if(task.id == null) {
+    if (task.id == null) {
       throw Exception('Task ID is null');
     }
 
@@ -96,8 +100,7 @@ class TaskNotifier extends _$TaskNotifier {
       // Update state
       final updatedTask = previousTasks.where((t) => t.id != task.id).toList();
       state = AsyncValue.data(_sortTaskByStatusAndDate(updatedTask));
-
-    } catch(e, st) {
+    } catch (e, st) {
       Logger().e('Failed to delete task: $e');
       Logger().t(st);
       state = AsyncValue.data(state.value ?? []);
@@ -126,4 +129,14 @@ class TaskNotifier extends _$TaskNotifier {
     });
     return tasks;
   }
+}
+
+@riverpod
+TaskStats taskStats(Ref ref) {
+  final taskState = ref.watch(taskNotifierProvider);
+
+  return taskState.maybeWhen(
+    data: (tasks) => TaskStats.fromTasks(tasks),
+    orElse: () => TaskStats.empty(),
+  );
 }

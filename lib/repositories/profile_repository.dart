@@ -20,7 +20,7 @@ class ProfileRepository {
           .select()
           .single();
 
-      return Profile.fromMap(updatedProfile);
+      return Profile.fromJson(updatedProfile);
     } on PostgrestException catch (e) {
       throw Exception('Failed to update username: ${e.message}');
     } catch (e) {
@@ -37,9 +37,9 @@ class ProfileRepository {
     final profileRow = await client
         .from('profiles')
         .select()
-        .eq('user_id', user.id)
+        .eq('id', user.id)
         .maybeSingle();
 
-    return profileRow != null ? Profile.fromMap(profileRow) : null;
+    return profileRow != null ? Profile.fromJson(profileRow) : null;
   }
 }
