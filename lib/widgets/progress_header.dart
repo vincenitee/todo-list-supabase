@@ -44,7 +44,7 @@ class ProgressHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.blue.shade600,
+            color: percentage == 100 ? Colors.green.shade600 : Colors.blue.shade600,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(

@@ -20,7 +20,7 @@ class ProgressCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: percentage == 100 ? Colors.green.shade50 : Colors.blue.shade50,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.blue.shade100),
       ),
