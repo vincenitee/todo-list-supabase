@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:todo_list_supabase/providers/auth_form_provider.dart';
-import 'package:todo_list_supabase/providers/auth_provider.dart';
 import 'package:todo_list_supabase/widgets/auth_button.dart';
 import 'package:todo_list_supabase/widgets/auth_loading_overlay.dart';
 import 'package:todo_list_supabase/widgets/auth_navigation_row.dart';

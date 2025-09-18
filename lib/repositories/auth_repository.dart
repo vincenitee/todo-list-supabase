@@ -124,8 +124,9 @@ class AuthRepository {
       );
 
       final user = response.user;
-      if (user == null)
+      if (user == null) {
         throw AuthException('Failed to update user authentication');
+      }
 
       // Update profile information
       await client

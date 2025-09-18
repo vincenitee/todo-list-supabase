@@ -81,7 +81,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           foregroundColor: Colors.black45,
                           backgroundColor: Colors.transparent,
                           onPressed: () {
-                            // TODO: trigger resend OTP
+                            
                           },
                         ),
                       ],
