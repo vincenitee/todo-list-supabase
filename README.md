@@ -8,7 +8,7 @@ A simple **ToDo List App** built with **Flutter**, using **Supabase** for authen
 
 - User authentication (sign up, login, logout).  
 - Update username and password.  
-- Add, edit, delete, and mark tasks as complete.  
+- Add, delete, and mark tasks as complete.  
 - Profile info stored in Supabase `profiles` table.  
 - Password managed in Supabase `auth.users`.  
 - Clean state management with Riverpod.  
