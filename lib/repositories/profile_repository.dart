@@ -8,23 +8,26 @@ class ProfileRepository {
 
   Future<Profile?> updateUsername(String username) async {
     try {
-      final authResponse = await client.auth.getUser();
-      final user = authResponse.user;
+      // Fetch the current authenticated user
+      final user = client.auth.currentUser;
 
-      if (user == null) throw AuthException('Failed to update user authentication');
+      // Check if the user is null
+      if (user == null) {
+        throw Exception('No authenticated user found');
+      }
 
-      final updatedProfile = await client
+      // Update the username in the profiles table
+      final response = await client
           .from('profiles')
           .update({'username': username})
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .select()
           .single();
 
-      return Profile.fromJson(updatedProfile);
-    } on PostgrestException catch (e) {
-      throw Exception('Failed to update username: ${e.message}');
+      return Profile.fromJson(response);
     } catch (e) {
-      throw Exception('Failed to update username: $e');
+      // Let the provider handle the error
+      rethrow;
     }
   }
 
@@ -38,6 +41,16 @@ class ProfileRepository {
         .from('profiles')
         .select()
         .eq('id', user.id)
+        .maybeSingle();
+
+    return profileRow != null ? Profile.fromJson(profileRow) : null;
+  }
+
+  Future<Profile?> getProfileById(String id) async {
+    final profileRow = await client
+        .from('profiles')
+        .select()
+        .eq('id', id)
         .maybeSingle();
 
     return profileRow != null ? Profile.fromJson(profileRow) : null;

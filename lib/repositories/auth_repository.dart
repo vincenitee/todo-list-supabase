@@ -111,41 +111,6 @@ class AuthRepository {
     }
   }
 
-  // Update Information
-  Future<User?> updateInformation(
-    String email,
-    String username,
-    String password,
-  ) async {
-    try {
-      // Update auth information
-      final response = await client.auth.updateUser(
-        UserAttributes(email: email, password: password),
-      );
-
-      final user = response.user;
-      if (user == null) {
-        throw AuthException('Failed to update user authentication');
-      }
-
-      // Update profile information
-      await client
-          .from('profiles')
-          .update({'username': username})
-          .eq('user_id', user.id);
-
-      return user;
-      // Supabase doesn't throw on update errors, so we should check the response
-      // if needed based on your Supabase setup
-    } on AuthException {
-      rethrow;
-    } on PostgrestException catch (e) {
-      throw Exception('Failed to update profile: ${e.message}');
-    } catch (e) {
-      throw Exception('Failed to update user information: $e');
-    }
-  }
-
   // Get the current user
   User? getCurrentUser() {
     return client.auth.currentUser;
@@ -165,7 +130,7 @@ class AuthRepository {
       final response = await client
           .from('profiles')
           .select()
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .maybeSingle();
 
       return response;

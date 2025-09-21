@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
+  final String? value;
   final TextEditingController? controller;
   final TextInputAction textInputAction;
   final String label;
@@ -19,6 +20,7 @@ class CustomTextField extends StatefulWidget {
 
   const CustomTextField({
     super.key,
+    this.value,
     this.controller,
     this.textInputAction = TextInputAction.next,
     this.label = '',
@@ -39,6 +41,7 @@ class CustomTextField extends StatefulWidget {
   // Email
   factory CustomTextField.email({
     Key? key,
+    String? value,
     TextEditingController? controller,
     String label = 'Email',
     String? errorText,
@@ -62,6 +65,7 @@ class CustomTextField extends StatefulWidget {
   // Password
   factory CustomTextField.password({
     Key? key,
+    String? value,
     TextEditingController? controller,
     String label = 'Password',
     String? errorText,
@@ -85,6 +89,7 @@ class CustomTextField extends StatefulWidget {
 
   factory CustomTextField.confirmPassword({
     Key? key,
+    String? value,
     TextEditingController? controller,
     String label = 'Confirm Password',
     String? errorText,
@@ -109,6 +114,7 @@ class CustomTextField extends StatefulWidget {
   // Username
   factory CustomTextField.username({
     Key? key,
+    String? value,
     TextEditingController? controller,
     String label = 'Username',
     String? errorText,
@@ -243,6 +249,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.value,
       enabled: widget.enabled,
       controller: widget.controller,
       textInputAction: widget.textInputAction,

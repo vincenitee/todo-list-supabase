@@ -1,16 +1,17 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:todo_list_supabase/models/profile.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class UserProfile {
-  final User authUser;
-  final Profile profile;
+part 'user_profile.freezed.dart';
+part 'user_profile.g.dart';
 
-  UserProfile({
-    required this.authUser,
-    required this.profile
-  });
+@freezed
+abstract class UserProfile with _$UserProfile {
+  const factory UserProfile({
+    required String id,
+    String? email,
+    String? username,
+    DateTime? createdAt,
+  }) = _UserProfile;
 
-  String get id => authUser.id;
-  String get email => authUser.email ?? '';
-  String get username => profile.username;
+  factory UserProfile.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileFromJson(json);
 }

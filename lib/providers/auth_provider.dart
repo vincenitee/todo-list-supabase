@@ -62,7 +62,16 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  
+  Future<void> updatePassword(String password) async {
+    try {
+      await _repository.updatePassword(password);
+    } catch (error) {
+      Logger().e(error);
+      final friendlyError = AuthErrorMapper.mapError(error);
+      state = AsyncValue.error(friendlyError, StackTrace.current);
+      rethrow;
+    }
+  }
 
   Future<void> verifyOtp(String email, String token) async {
     try {
@@ -72,26 +81,6 @@ class AuthNotifier extends _$AuthNotifier {
       final friendlyError = AuthErrorMapper.mapError(error);
       state = AsyncValue.error(friendlyError, StackTrace.current);
       rethrow;
-    }
-  }
-
-  // Update Profile - now called by AuthForm
-  Future<void> updateProfile(
-    String email,
-    String username,
-    String password,
-  ) async {
-
-    try {
-      await _repository.updateInformation(
-        email,
-        username,
-        password,
-      );
-    } catch (error) {
-      final friendlyError = AuthErrorMapper.mapError(error);
-      state = AsyncValue.error(friendlyError, StackTrace.current);
-      rethrow; // Re-throw so AuthForm can handle the error in its own state
     }
   }
 }

@@ -6,7 +6,7 @@ part of 'auth_form_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authFormHash() => r'c04a8043218847d42b9adbe450e5878281d07401';
+String _$authFormHash() => r'b33d0dbfc81cdc82f41dd23c1878e5898390a13d';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_list_supabase/exceptions/auth_exceptions.dart';
 import 'package:todo_list_supabase/models/profile.dart';
 import 'package:todo_list_supabase/providers/profile_repository_provider.dart';
 import 'package:todo_list_supabase/repositories/profile_repository.dart';
@@ -15,15 +16,17 @@ class ProfileNotifier extends _$ProfileNotifier {
     return _repository.getProfile();
   }
 
-  // Update Username
+  // Update username
   Future<void> updateUsername(String username) async {
-    state = AsyncValue.loading();
-
+    state = const AsyncValue.loading();
     try {
       final updatedProfile = await _repository.updateUsername(username);
       state = AsyncValue.data(updatedProfile);
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      final friendlyError = AuthErrorMapper.mapError(e);
+      state = AsyncValue.error(friendlyError, st);
     }
   }
+
+
 }

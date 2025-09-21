@@ -16,7 +16,7 @@ class TaskList extends ConsumerWidget {
 
     return taskState.when(
       data: (tasks) {
-        if (tasks == null || tasks.isEmpty) {
+        if (tasks.isEmpty) {
           return const NoTaskYet();
         }
 

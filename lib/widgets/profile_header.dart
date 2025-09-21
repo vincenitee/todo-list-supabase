@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_list_supabase/providers/profile_provider.dart';
+import 'package:logger/web.dart';
+import 'package:todo_list_supabase/providers/user_profile_provider.dart';
 import 'package:todo_list_supabase/utils/app_date_utils.dart';
 
 class ProfileHeader extends ConsumerWidget {
@@ -8,7 +9,9 @@ class ProfileHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = ref.watch(profileNotifierProvider);
+    final userProfile = ref.watch(userProfileProvider);
+
+    Logger().d(userProfile);
 
     return Container(
       width: double.infinity,
@@ -45,28 +48,23 @@ class ProfileHeader extends ConsumerWidget {
             const SizedBox(height: 16),
 
             // User Name
-            profileState.when(
-              data: (profile) => Text(
-                profile?.username ?? '',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              loading: () => Container(
-                width: 120,
-                height: 16,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              error: (err, _) => Text(
-                'Error: $err',
-                style: const TextStyle(color: Colors.red),
-              ),
-            ),
+            userProfile.username != null
+                ? Text(
+                    userProfile.username ?? 'Guest User',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  )
+                : Container(
+                    width: 120,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
 
             const SizedBox(height: 8),
 
@@ -80,34 +78,23 @@ class ProfileHeader extends ConsumerWidget {
                   size: 16,
                 ),
                 const SizedBox(width: 8),
-                profileState.when(
-                  data: (profile) {
-                    final memberSince = profile?.createdAt;
-                    final formattedDate = memberSince != null
-                        ? AppDateUtils.formatDate(memberSince)
-                        : 'Unknown';
 
-                    return Text(
-                      'Member since $formattedDate', // replace with profile?.createdAt later
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
+                userProfile.createdAt != null
+                    ? Text(
+                        'Member since ${AppDateUtils.formatDate(userProfile.createdAt!)}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                        ),
+                      )
+                    : Container(
+                        width: 120,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: Colors.white24,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
-                    );
-                  },
-                  error: (e, st) => Text(
-                    'Error loading date',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  loading: () => Container(
-                    width: 120,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: Colors.white24,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
               ],
             ),
           ],
