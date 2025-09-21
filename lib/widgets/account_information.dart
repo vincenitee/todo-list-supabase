@@ -14,29 +14,14 @@ class AccountInformationSection extends ConsumerWidget {
     final formState = ref.watch(userProfileFormProvider);
     final formNotifier = ref.read(userProfileFormProvider.notifier);
 
-    // Watch the actual provider states
-    // ProfileNotifier returns AsyncValue<Profile?>
     final profileState = ref.watch(profileNotifierProvider);
-    // AuthNotifier returns AsyncValue<Stream<AuthState>> but we need to handle loading differently
     final authState = ref.watch(authNotifierProvider);
-
-    // For your specific providers:
-    // - profileState is AsyncValue<Profile?> so it has isLoading, hasError
-    // - authState is AsyncValue<Stream<AuthState>> - this won't show loading for updatePassword
-
-    // The issue: AuthNotifier doesn't set loading state for updatePassword because it rethrows
-    // Solution: Track loading manually or modify AuthNotifier
 
     final isProfileLoading = profileState.isLoading;
     final hasProfileError = profileState.hasError;
     final profileError = profileState.hasError
         ? profileState.error.toString()
         : null;
-
-    // Note: authState.isLoading won't be true for updatePassword since it rethrows immediately
-    // You'll need to either:
-    // 1. Modify AuthNotifier to not rethrow and manage state properly, or
-    // 2. Use a separate loading state for auth operations
 
     final isLoading = isProfileLoading || formState.isLoading;
     final hasErrors = hasProfileError;
@@ -196,7 +181,7 @@ class AccountInformationSection extends ConsumerWidget {
     final authState = ref.read(authNotifierProvider);
 
     if (!profileState.hasError && !authState.hasError) {
-      formNotifier.reset(); // Add this method to clear form
+      formNotifier.reset(); 
     }
   }
 }
